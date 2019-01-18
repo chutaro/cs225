@@ -51,7 +51,7 @@ PNG grayscale(PNG image) {
  * is a total of `sqrt((3 * 3) + (4 * 4)) = sqrt(25) = 5` pixels away and
  * its luminance is decreased by 2.5% (0.975x its original value).  At a
  * distance over 160 pixels away, the luminance will always decreased by 80%.
- * 
+ *
  * The modified PNG is then returned.
  *
  * @param image A PNG object which holds the image data to be modified.
@@ -61,11 +61,20 @@ PNG grayscale(PNG image) {
  * @return The image with a spotlight.
  */
 PNG createSpotlight(PNG image, int centerX, int centerY) {
-
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+      double d = sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
+      if (d > 160) {
+        pixel.l = pixel.l * 0.2;
+      } else {
+        pixel.l = pixel.l * (1 - 0.005 * d);
+      }
+    }
+  }
   return image;
-  
 }
- 
+
 
 /**
  * Returns a image transformed to Illini colors.
@@ -78,10 +87,19 @@ PNG createSpotlight(PNG image, int centerX, int centerY) {
  * @return The illinify'd image.
 **/
 PNG illinify(PNG image) {
-
+  for (unsigned x = 0; x < image.width(); x++) {
+    for (unsigned y = 0; y < image.height(); y++) {
+      HSLAPixel & pixel = image.getPixel(x, y);
+      if (pixel.h < 113.5 || pixel.h > 293.5) {
+        pixel.h = 11;
+      } else {
+        pixel.h = 216;
+      }
+    }
+  }
   return image;
 }
- 
+
 
 /**
 * Returns an immge that has been watermarked by another image.
@@ -96,6 +114,14 @@ PNG illinify(PNG image) {
 * @return The watermarked image.
 */
 PNG watermark(PNG firstImage, PNG secondImage) {
-
+  for (unsigned x = 0; x < firstImage.width(); x++) {
+    for (unsigned y = 0; y < firstImage.height(); y++) {
+      HSLAPixel & pixel1 = firstImage.getPixel(x, y);
+      HSLAPixel & pixel2 = secondImage.getPixel(x, y);
+      if (pixel2.l == 1) {
+        pixel1.l += 0.2;
+      }
+    }
+  }
   return firstImage;
 }
