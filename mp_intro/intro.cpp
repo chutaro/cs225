@@ -29,10 +29,10 @@ PNG myArt(unsigned int width, unsigned int height) {
     for (unsigned y = 0; y < height; y++) {
       HSLAPixel & pixel = myWork.getPixel(x, y);
 
-      pixel.h = (x + y) / 359 + 0.5;
+      pixel.h = 360.0 * (x + y) / (width + height);
       pixel.s = 0.8;
-      pixel.l = 0.8;
-      pixel.a = 0.8;
+      pixel.l = 1.0 * (x + y) / (width + height);
+      pixel.a = 1.0;
     }
   }
 
