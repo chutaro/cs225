@@ -5,8 +5,8 @@ int main() {
   Image base, png1, png2, png3;
   base.readFromFile("alma.png");
   png1.readFromFile("japan.png");
-  png1.readFromFile("pika.png");
-  png1.readFromFile("word.png");
+  png2.readFromFile("pika.png");
+  png3.readFromFile("word.png");
 
   StickerSheet test(base, 3);
   test.addSticker(png1, 30, 30);

@@ -1,5 +1,5 @@
-#include "cs225/PNG.h"
-#include "cs225/HSLAPixel.h"
+//#include "cs225/PNG.h"
+//#include "cs225/HSLAPixel.h"
 #include "Image.h"
 #include "StickerSheet.h"
 
@@ -74,6 +74,7 @@ int StickerSheet::addSticker(Image &sticker, unsigned x, unsigned y) {
   x_array[count_] = x;
   y_array[count_] = y;
   count_++;
+  return count_ - 1;
 }
 
 bool StickerSheet::translate(unsigned index, unsigned x, unsigned y) {
@@ -89,39 +90,37 @@ void StickerSheet::removeSticker(unsigned index) {
   if (index >= count_) {
     return;
   }
-  for (unsigned i = index; i < max_; i++) {
-    if (stickerData_[i] == NULL) {
-      return;
-    }
-    if (i == max_ - 1 || stickerData_[i + 1] == NULL) {
-      stickerData_[i] = NULL;
-      x_array[i] = NULL;
-      y_array[i] = NULL;
-      return;
+  for (unsigned i = index; i < count_; i++) {
+    if (i == max_ - 1) {
+      stickerData_[i] = Image();
+      x_array[i] = 0;
+      y_array[i] = 0;
     }
     stickerData_[i] = stickerData_[i + 1];
     x_array[i] = x_array[i + 1];
     y_array[i] = y_array[i + 1];
   }
+  count_--;
 }
 
 Image* StickerSheet::getSticker(unsigned index) {
-  if (index < 0 || index >= max_) {
+  if (index >= count_) {
     return NULL;
   }
-  return stickerData_+index;
+  Image * output = &stickerData_[index];
+  return output;
 }
 
 Image StickerSheet::render() const {
   Image output(base_);
-  for (unsigned i = 0; i < max_; i++) {
-    if (stickerData_[i] == NULL) {
-      break;
-    }
+  for (unsigned i = 0; i < count_; i++) {
     unsigned w = stickerData_[i].width();
-    unsigned h = stickerData_[i].height_();
-    if (x_array[i] + w > output.width() || y_array[i] + h > output.height()) {
-      output.resize(x_array[i] + w, y_array[i] + h);
+    unsigned h = stickerData_[i].height();
+    if (x_array[i] + w > output.width()) {
+      output.resize(x_array[i] + w, output.height());
+    }
+    if (y_array[i] + h > output.height()) {
+      output.resize(output.width(), y_array[i] + h);
     }
     for (unsigned x = 0; x < w; x++) {
       for (unsigned y = 0; y < h; y++) {
