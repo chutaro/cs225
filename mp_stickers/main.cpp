@@ -9,8 +9,8 @@ int main() {
   png3.readFromFile("word.png");
 
   StickerSheet test(base, 3);
-  test.addSticker(png1, 30, 30);
-  test.addSticker(png2, 100, 100);
+  test.addSticker(png1, 300, 400);
+  test.addSticker(png2, 10, 10);
   test.addSticker(png3, 200, 200);
   Image mine = test.render();
   //

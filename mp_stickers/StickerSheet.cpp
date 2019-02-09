@@ -48,12 +48,12 @@ StickerSheet const & StickerSheet::operator=(const StickerSheet &other){
   return *this;
 }
 
-void StickerSheet::changeMaxSticker(unsigned max) {
+void StickerSheet::changeMaxStickers(unsigned max) {
   Image *tempS = new Image[max];
   unsigned *tempX = new unsigned[max];
   unsigned *tempY = new unsigned[max];
   for (unsigned i = 0; i < max; i++) {
-    if (i < count_) {
+    if (i < max_) {
       tempS[i] = stickerData_[i];
       tempX[i] = x_array[i];
       tempY[i] = y_array[i];

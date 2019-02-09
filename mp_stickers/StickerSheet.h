@@ -15,7 +15,7 @@
    void _copy(const StickerSheet &other);
    void _destroy();
 
-   void changeMaxSticker(unsigned max);
+   void changeMaxStickers(unsigned max);
    int addSticker(Image &sticker, unsigned x, unsigned y);
    bool translate(unsigned index, unsigned x, unsigned y);
    void removeSticker(unsigned index);
