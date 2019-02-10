@@ -53,7 +53,7 @@ void StickerSheet::changeMaxStickers(unsigned max) {
   unsigned *tempX = new unsigned[max];
   unsigned *tempY = new unsigned[max];
   for (unsigned i = 0; i < max; i++) {
-    if (i < max_) {
+    if (i < count_) {
       tempS[i] = stickerData_[i];
       tempX[i] = x_array[i];
       tempY[i] = y_array[i];
@@ -63,6 +63,9 @@ void StickerSheet::changeMaxStickers(unsigned max) {
   stickerData_ = tempS;
   x_array = tempX;
   y_array = tempY;
+  if (count_ > max) {
+    count_ = max;
+  }
   max_ = max;
 }
 
