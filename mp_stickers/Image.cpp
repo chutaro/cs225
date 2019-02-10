@@ -145,6 +145,11 @@ void Image::scale(double factor) {
 }
 
 void Image::scale(unsigned w, unsigned h) {
-  double factor = w / width();
-  scale(factor);
+  double factorW = ((double) w) / width();
+  double factorH = ((double) h) / height();
+  if (factorW < factorH) {
+    scale(factorW);
+  } else {
+    scale(factorH);
+  }
 }
