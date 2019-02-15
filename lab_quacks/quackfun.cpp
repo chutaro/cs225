@@ -31,7 +31,14 @@ T sum(stack<T>& s)
 {
 
     // Your code here
-    return T(); // stub return value (0 for primitive types). Change this!
+    if (s.size() == 1) {
+      return s.top();
+    }
+    T temp = s.top();
+    s.pop();
+    T tempSum = sum(s);
+    s.push(temp);
+    return s.top() + tempSum; // stub return value (0 for primitive types). Change this!
                 // Note: T() is the default value for objects, and 0 for
                 // primitive types
 }
@@ -57,7 +64,23 @@ bool isBalanced(queue<char> input)
 {
 
     // @TODO: Make less optimistic
-    return true;
+    int count = 0;
+    size_t s = input.size();
+    for (size_t i = 0; i < s; i++) {
+      char temp = input.front();
+      if (temp == '[') {
+        count++;
+      } else if (temp == ']') {
+        count--;
+      }
+      if (count < 0) {
+        return false;
+      }
+      input.pop();
+      input.push(temp);
+    }
+    stack<char> ss;
+    return (count == 0);
 }
 
 /**
@@ -79,9 +102,40 @@ template <typename T>
 void scramble(queue<T>& q)
 {
     stack<T> s;
+    queue<T> q0;
     // optional: queue<T> q2;
 
     // Your code here
+    bool state = true;
+    int chunk = 1;
+    int count = 0;
+    while (!q.empty()) {
+      if (state) {
+        T temp = q.front();
+        q.pop();
+        q0.push(temp);
+      } else {
+        s.push(q.front());
+        q.pop();
+      }
+      count++;
+      if (count == chunk) {
+        if (!state) {
+          while (!s.empty()) {
+            q0.push(s.top());
+            s.pop();
+          }
+        }
+        state = !state;
+        chunk++;
+        count = 0;
+      }
+    }
+    while (!s.empty()) {
+      q0.push(s.top());
+      s.pop();
+    }
+    q = q0;
 }
 
 /**
@@ -110,8 +164,8 @@ template <typename T>
 bool verifySame(stack<T>& s, queue<T>& q)
 {
     bool retval = true; // optional
-    // T temp1; // rename me
-    // T temp2; // rename :)
+    T temp1; // rename me
+    T temp2; // rename :)
 
     // Your code here
 
