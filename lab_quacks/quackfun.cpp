@@ -62,26 +62,27 @@ T sum(stack<T>& s)
  */
 bool isBalanced(queue<char> input)
 {
-
-    // @TODO: Make less optimistic
-    int count = 0;
-    size_t s = input.size();
-    for (size_t i = 0; i < s; i++) {
-      char temp = input.front();
-      if (temp == '[') {
-        count++;
-      } else if (temp == ']') {
-        count--;
+  stack<char> s;
+  while (!input.empty()) {
+      if (input.front() == '[') {
+        s.push(input.front());
+        input.pop();
+      } else if (input.front() == ']') {
+        if (s.empty()) {
+          return false;
+        }
+        s.pop();
+        input.pop();
+      } else {
+        input.pop();
       }
-      if (count < 0) {
-        return false;
-      }
-      input.pop();
-      input.push(temp);
     }
-    stack<char> ss;
-    return (count == 0);
+    if (!s.empty()) {
+      return false;
+    }
+    return true;
 }
+
 
 /**
  * Reverses even sized blocks of items in the queue. Blocks start at size
