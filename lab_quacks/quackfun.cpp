@@ -165,11 +165,15 @@ template <typename T>
 bool verifySame(stack<T>& s, queue<T>& q)
 {
     bool retval = true; // optional
-    T temp1; // rename me
-    T temp2; // rename :)
 
     // Your code here
-
+    if (s.empty()) {return true;}
+    T temp = s.top();
+    s.pop();
+    retval = verifySame(s, q) && temp == q.front();
+    q.push(q.front());
+    q.pop();
+    s.push(temp);
     return retval;
 }
 
