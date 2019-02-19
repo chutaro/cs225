@@ -1,3 +1,6 @@
+#include <iostream>
+using std::cout;
+using std::endl;
 /**
  * @file list.cpp
  * Doubly Linked List (MP 3).
@@ -18,7 +21,8 @@ List<T>::List() {
 template <typename T>
 typename List<T>::ListIterator List<T>::begin() const {
   // @TODO: graded in MP3.1
-  return List<T>::ListIterator(NULL);
+  if (head_ == NULL) {return ListIterator();}
+  return List<T>::ListIterator(head_);
 }
 
 /**
@@ -66,6 +70,7 @@ void List<T>::insertFront(T const & ndata) {
     tail_ = newNode;
   }
 
+  head_ = newNode;
 
   length_++;
 
@@ -80,6 +85,20 @@ void List<T>::insertFront(T const & ndata) {
 template <typename T>
 void List<T>::insertBack(const T & ndata) {
   /// @todo Graded in MP3.1
+  ListNode * newNode = new ListNode(ndata);
+  newNode -> next = NULL;
+  newNode -> prev = tail_;
+
+  if (tail_ != NULL) {
+    tail_ -> next = newNode;
+  }
+  if (head_ == NULL) {
+    head_ = newNode;
+  }
+
+  tail_ = newNode;
+
+  length_++;
 }
 
 /**
@@ -103,16 +122,16 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
   ListNode * curr = start;
 
-  for (int i = 0; i < splitPoint || curr != NULL; i++) {
+  for (int i = 0; i < splitPoint && curr != NULL; i++) {
     curr = curr->next;
   }
 
   if (curr != NULL) {
       curr->prev->next = NULL;
       curr->prev = NULL;
+      return curr;
   }
-
-  return NULL;
+  return curr;
 }
 
 /**
@@ -127,6 +146,25 @@ typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
 template <typename T>
 void List<T>::waterfall() {
   /// @todo Graded in MP3.1
+  ListNode * curr = head_;
+  ListNode * temp = NULL;
+  if (curr == NULL) {
+    return;
+  }
+  if (curr->next == NULL) {
+    return;
+  }
+  while (curr->next != tail_) {
+    temp = curr;
+    curr = curr->next;
+    curr->prev->next = curr->next;
+    curr->next->prev = curr->prev;
+    curr->prev = tail_;
+    tail_->next = curr;
+    curr->next = NULL;
+    tail_ = curr;
+    curr = temp->next;
+  }
 }
 
 /**

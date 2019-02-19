@@ -49,6 +49,25 @@ TEST_CASE("List::insert contents", "[weight=5][part=1][valgrind]") {
     REQUIRE( "< 1 2 3 3 2 1 >" == s.str() );
 }
 
+TEST_CASE("List::waterfall easy", "[weight=20][part=1][valgrind]") {
+  List<int> list;
+
+  list.insertBack(1);
+  list.insertBack(2);
+  list.insertBack(3);
+  list.insertBack(4);
+  list.insertBack(5);
+  list.insertBack(6);
+  list.insertBack(7);
+  list.insertBack(8);
+
+  list.waterfall();
+  stringstream s;
+
+  list.print(s);
+
+  REQUIRE( "< 1 3 5 7 2 6 4 8 >" == s.str() );
+}
 
 TEST_CASE("List::waterfall", "[weight=20][part=1][valgrind]") {
 
@@ -237,5 +256,3 @@ TEST_CASE("List::ListIterator::end is not ::begin in a non-empty list", "[weight
 
     REQUIRE( (bool)(list.begin() != list.end()) );
 }
-
-
