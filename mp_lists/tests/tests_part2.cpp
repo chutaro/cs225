@@ -14,6 +14,26 @@
 using namespace cs225;
 
 
+TEST_CASE("List::reverse easy", "[weight=0][part=2][valgrind]") {
+  List<int> list;
+
+  list.insertBack(1);
+  list.insertBack(2);
+  list.insertBack(3);
+  list.insertBack(4);
+  list.insertBack(5);
+  list.insertBack(6);
+  list.insertBack(7);
+  list.insertBack(8);
+
+  list.reverse();
+  stringstream s;
+
+  list.print(s);
+
+  REQUIRE( "< 8 7 6 5 4 3 2 1 >" == s.str() );
+}
+
 TEST_CASE("List::reverse", "[weight=10][part=2][valgrind]") {
   PNG in;        in.readFromFile("tests/alma.png");
   PNG expected;  expected.readFromFile("tests/expected-reverse.png");
@@ -25,6 +45,26 @@ TEST_CASE("List::reverse", "[weight=10][part=2][valgrind]") {
   INFO("Output image `out` saved as actual-reverse.png");
 
   REQUIRE( out == expected );
+}
+
+TEST_CASE("List::reverseNth #1 easy", "[weight=0][part=2][valgrind]") {
+  List<int> list;
+
+  list.insertBack(1);
+  list.insertBack(2);
+  list.insertBack(3);
+  list.insertBack(4);
+  list.insertBack(5);
+  list.insertBack(6);
+  list.insertBack(7);
+  list.insertBack(8);
+
+  list.reverseNth(3);
+  stringstream s;
+
+  list.print(s);
+
+  REQUIRE( "< 3 2 1 6 5 4 8 7 >" == s.str() );
 }
 
 TEST_CASE("List::reverseNth #1", "[weight=5][part=2][valgrind]") {
@@ -92,16 +132,19 @@ TEST_CASE("List::merge", "[weight=10][part=2][valgrind]") {
 TEST_CASE("List::sort simple #1", "[weight=2][part=2][valgrind]") {
     List<int> list;
 
-    list.insertBack(2);
+    list.insertBack(3);
+    list.insertBack(6);
+    list.insertBack(4);
+    list.insertBack(1);
     list.insertBack(5);
-    list.insertBack(2);
+    list.insertBack(10);
 
     list.sort();
 
     stringstream s;
     list.print(s);
 
-    REQUIRE(s.str() == "< 2 2 5 >");
+    REQUIRE(s.str() == "< 1 3 4 5 6 10 >");
 }
 
 TEST_CASE("List::sort simple #2", "[weight=2][part=2][valgrind]") {
