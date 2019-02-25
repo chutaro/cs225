@@ -1,4 +1,4 @@
-#include <iostream>
+ #include <iostream>
 using std::cout;
 using std::endl;
 /**
@@ -121,6 +121,11 @@ template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
   ListNode * curr = start;
+  
+  if (splitPoint == 0) {
+    start = NULL;
+    return curr;
+  }
 
   for (int i = 0; i < splitPoint && curr != NULL; i++) {
     curr = curr->next;
@@ -352,6 +357,6 @@ typename List<T>::ListNode* List<T>::mergesort(ListNode * start, int chainLength
   }
   curr->prev->next = NULL;
   curr->prev = NULL;
-  
+
   return merge(mergesort(start, mid), mergesort(curr, chainLength - mid));
 }
