@@ -121,8 +121,8 @@ template <typename T>
 typename List<T>::ListNode * List<T>::split(ListNode * start, int splitPoint) {
   /// @todo Graded in MP3.1
   ListNode * curr = start;
-  
-  if (splitPoint == 0) {
+
+  if (splitPoint <= 0) {
     start = NULL;
     return curr;
   }
