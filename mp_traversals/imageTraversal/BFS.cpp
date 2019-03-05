@@ -22,12 +22,9 @@ using namespace cs225;
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this BFS
  */
-BFS::BFS(const PNG & png, const Point & start, double tolerance) {
+BFS::BFS(const PNG & png, const Point & start, double tolerance) : ImageTraversal(png, start, tolerance) {
   /** @todo [Part 1] */
-  png_ = png;
-  start_ = start;
-  tolerance_ = tolerance;
-  neighbors_.push(start_);
+  toVisit_.push(start);
 }
 
 /**
@@ -35,7 +32,7 @@ BFS::BFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator BFS::begin() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator();
+  return ImageTraversal::Iterator(this);
 }
 
 /**
@@ -51,7 +48,29 @@ ImageTraversal::Iterator BFS::end() {
  */
 void BFS::add(const Point & point) {
   /** @todo [Part 1] */
-  neighbors_.push(point);
+
+  // check if the point was alerady visited.
+  std::list<Point>::iterator itr;
+  for (itr = visited_.begin(); itr != visited_.end(); itr++) {
+    if (point == *itr) {
+      return;
+    }
+  }
+
+  // check if the point was already added to the toVisit_. If so, update it.
+  std::queue<Point> temp;
+  bool already = false;
+  while (!toVisit_.empty()) {
+    if (point == toVisit_.front()) {
+      already = true;
+    }
+    temp.push(toVisit_.front());
+    toVisit_.pop();
+  }
+  toVisit_ = temp;
+  if (already) {return;}
+
+  toVisit_.push(point);
 }
 
 /**
@@ -59,8 +78,9 @@ void BFS::add(const Point & point) {
  */
 Point BFS::pop() {
   /** @todo [Part 1] */
-  Point toReturn = neighbors_.front();
-  neighbors_.pop();
+  Point toReturn = toVisit_.front();
+  toVisit_.pop();
+  visited_.push_back(toReturn);
   return toReturn;
 }
 
@@ -69,7 +89,7 @@ Point BFS::pop() {
  */
 Point BFS::peek() const {
   /** @todo [Part 1] */
-  return neighbors_.front();
+  return toVisit_.front();
 }
 
 /**
@@ -77,5 +97,5 @@ Point BFS::peek() const {
  */
 bool BFS::empty() const {
   /** @todo [Part 1] */
-  return neighbors_.empty();
+  return toVisit_.empty();
 }

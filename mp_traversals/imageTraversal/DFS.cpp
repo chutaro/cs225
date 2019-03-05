@@ -22,12 +22,9 @@
  * @param tolerance If the current point is too different (difference larger than tolerance) with the start point,
  * it will not be included in this DFS
  */
-DFS::DFS(const PNG & png, const Point & start, double tolerance) {
+DFS::DFS(const PNG & png, const Point & start, double tolerance) : ImageTraversal(png, start, tolerance) {
   /** @todo [Part 1] */
-  png_ = png;
-  start_ = start;
-  tolerance_ = tolerance;
-  neighbors_.push(start_);
+  toVisit_.push(start);
 }
 
 /**
@@ -35,7 +32,7 @@ DFS::DFS(const PNG & png, const Point & start, double tolerance) {
  */
 ImageTraversal::Iterator DFS::begin() {
   /** @todo [Part 1] */
-  return ImageTraversal::Iterator();
+  return ImageTraversal::Iterator(this);
 }
 
 /**
@@ -51,13 +48,31 @@ ImageTraversal::Iterator DFS::end() {
  */
 void DFS::add(const Point & point) {
   /** @todo [Part 1] */
-  // if (calculateDelta(png_.getPixel(point.x, point.y), png_.getPixel(start_.x, start_.y)) >= tolerance_) {
-  //   return;
-  // }
 
-  // visited.contains
+  // check if the point was alerady visited.
+  std::list<Point>::iterator itr;
+  for (itr = visited_.begin(); itr != visited_.end(); itr++) {
+    if (point == *itr) {
+      return;
+    }
+  }
 
-  neighbors_.push(point);
+  // check if the point was already added to the toVisit_. If so, update it.
+  std::stack<Point> temp;
+  while (!toVisit_.empty()) {
+    if (point == toVisit_.top()) {
+      toVisit_.pop();
+      break;
+    }
+    temp.push(toVisit_.top());
+    toVisit_.pop();
+  }
+  while (!temp.empty()) {
+    toVisit_.push(temp.top());
+    temp.pop();
+  }
+
+  toVisit_.push(point);
 }
 
 /**
@@ -65,8 +80,9 @@ void DFS::add(const Point & point) {
  */
 Point DFS::pop() {
   /** @todo [Part 1] */
-  Point toReturn = neighbors_.top();
-  neighbors_.pop();
+  Point toReturn = toVisit_.top();
+  toVisit_.pop();
+  visited_.push_back(toReturn);
   return toReturn;
 }
 
@@ -75,7 +91,7 @@ Point DFS::pop() {
  */
 Point DFS::peek() const {
   /** @todo [Part 1] */
-  return neighbors_.top();
+  return toVisit_.top();
 }
 
 /**
@@ -83,5 +99,5 @@ Point DFS::peek() const {
  */
 bool DFS::empty() const {
   /** @todo [Part 1] */
-  return neighbors_.empty();
+  return toVisit_.empty();
 }

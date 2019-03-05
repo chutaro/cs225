@@ -11,11 +11,17 @@
 /**
  * Calculates a metric for the difference between two pixels, used to
  * calculate if a pixel is within a tolerance.
- * 
+ *
  * @param p1 First pixel
  * @param p2 Second pixel
  * @return the difference between two HSLAPixels
  */
+ImageTraversal::ImageTraversal(const PNG & png, const Point & start, double tolerance) {
+  png_ = png;
+  start_ = start;
+  tolerance_ = tolerance;
+}
+
 double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2) {
   double h = fabs(p1.h - p2.h);
   double s = p1.s - p2.s;
@@ -25,7 +31,7 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
   if (h > 180) { h = 360 - h; }
   h /= 360;
 
-  return sqrt( (h*h) + (s*s) + (l*l) );    
+  return sqrt( (h*h) + (s*s) + (l*l) );
 }
 
 /**
@@ -33,6 +39,14 @@ double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2
  */
 ImageTraversal::Iterator::Iterator() {
   /** @todo [Part 1] */
+  curr_ = trav_->start_;
+  stop_ = true;
+}
+
+ImageTraversal::Iterator::Iterator(ImageTraversal *traversal) {
+  trav_ = traversal;
+  curr_ = trav_->start_;
+  stop_ = false;
 }
 
 /**
@@ -42,26 +56,69 @@ ImageTraversal::Iterator::Iterator() {
  */
 ImageTraversal::Iterator & ImageTraversal::Iterator::operator++() {
   /** @todo [Part 1] */
+
+  // if (trav_->empty()) {
+  //   curr_ = trav_->start_;
+  //   stop_ = true;
+  //   return *this;
+  // }
+
+  Point current = trav_->pop();
+  unsigned x = current.x;
+  unsigned y = current.y;
+  HSLAPixel startPixel = trav_->png_.getPixel(trav_->start_.x, trav_->start_.y);
+
+  if (x + 1 < trav_->png_.width()) {
+    if (calculateDelta(trav_->png_.getPixel(x+1, y), startPixel) < trav_->tolerance_) {
+      trav_->add(Point(x+1, y));
+    }
+  }
+  if (y + 1 < trav_->png_.height()) {
+    if (calculateDelta(trav_->png_.getPixel(x, y+1), startPixel) < trav_->tolerance_) {
+      trav_->add(Point(x, y+1));
+    }
+  }
+  if ((int) x - 1 >= 0) {
+    if (calculateDelta(trav_->png_.getPixel(x-1, y), startPixel) < trav_->tolerance_) {
+      trav_->add(Point(x-1, y));
+    }
+  }
+  if ((int) y - 1 >= 0) {
+    if (calculateDelta(trav_->png_.getPixel(x, y-1), startPixel) < trav_->tolerance_) {
+      trav_->add(Point(x, y-1));
+    }
+  }
+
+  if (trav_->empty()) {
+    curr_ = trav_->start_;
+    stop_ = true;
+    return *this;
+  }
+
+  curr_ = trav_->peek();
+  //std::cout << "next " << curr_ << std::endl;
   return *this;
 }
 
 /**
  * Iterator accessor opreator.
- * 
+ *
  * Accesses the current Point in the ImageTraversal.
  */
 Point ImageTraversal::Iterator::operator*() {
   /** @todo [Part 1] */
-  return Point(0, 0);
+  return this->curr_;
 }
 
 /**
  * Iterator inequality operator.
- * 
+ *
  * Determines if two iterators are not equal.
  */
 bool ImageTraversal::Iterator::operator!=(const ImageTraversal::Iterator &other) {
   /** @todo [Part 1] */
-  return false;
+  if (this->stop_ == other.stop_) {
+    return false;
+  }
+  return true;
 }
-
