@@ -59,18 +59,19 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
   /** @todo [Part 2] */
   int count = 0;
   animation.addFrame(image_);
+  for (size_t i = 0; i < travs_.size(); i++) {
+    for (const Point & p : *travs_[i]) {
+      count++;
+      image_.getPixel(p.x, p.y) = pickers_[i]->getColor(p.x, p.y);
+      if (count % frameInterval == 0) {
+        animation.addFrame(image_);
+      }
+      //std::cout << __LINE__ << ": pixel changed " << count << std::endl;
+    }
 
-  for (const Point & p : *travs_[0]) {
-    count++;
-    image_.getPixel(p.x, p.y) = pickers_[0]->getColor(p.x, p.y);
-    if (count % frameInterval == 0) {
+    if (count % frameInterval != 0) {
       animation.addFrame(image_);
     }
-    //std::cout << __LINE__ << ": pixel changed " << count << std::endl;
-  }
-
-  if (count % frameInterval != 0) {
-    animation.addFrame(image_);
   }
   return animation;
 }
