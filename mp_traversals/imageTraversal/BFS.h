@@ -6,8 +6,8 @@
 
 #include <iterator>
 #include <cmath>
-#include <list>
 #include <queue>
+#include <vector>
 
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -36,5 +36,4 @@ private:
   /** @todo [Part 1] */
   /** add private members here*/
   std::queue<Point> toVisit_;
-  std::list<Point> visited_;
 };

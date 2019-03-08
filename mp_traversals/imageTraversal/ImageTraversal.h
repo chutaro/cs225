@@ -4,6 +4,7 @@
 #pragma once
 
 #include <iterator>
+#include <vector>
 #include "../cs225/HSLAPixel.h"
 #include "../cs225/PNG.h"
 #include "../Point.h"
@@ -86,4 +87,8 @@ private:
   PNG png_;
   Point start_;
   double tolerance_;
+
+protected:
+  std::vector<std::vector<bool>> visited_;
+  std::vector<std::vector<bool>> added_;
 };

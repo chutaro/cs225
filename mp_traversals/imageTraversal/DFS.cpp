@@ -50,29 +50,29 @@ void DFS::add(const Point & point) {
   /** @todo [Part 1] */
 
   // check if the point was alerady visited.
-  std::list<Point>::iterator itr;
-  for (itr = visited_.begin(); itr != visited_.end(); itr++) {
-    if (point == *itr) {
-      return;
-    }
+  if (visited_[point.x][point.y]) {
+    return;
   }
-
+  
   // check if the point was already added to the toVisit_. If so, update it.
-  std::stack<Point> temp;
-  while (!toVisit_.empty()) {
-    if (point == toVisit_.top()) {
+  if (added_[point.x][point.y]) {
+    std::stack<Point> temp;
+    while (!toVisit_.empty()) {
+      if (point == toVisit_.top()) {
+        toVisit_.pop();
+        break;
+      }
+      temp.push(toVisit_.top());
       toVisit_.pop();
-      break;
     }
-    temp.push(toVisit_.top());
-    toVisit_.pop();
-  }
-  while (!temp.empty()) {
-    toVisit_.push(temp.top());
-    temp.pop();
+    while (!temp.empty()) {
+      toVisit_.push(temp.top());
+      temp.pop();
+    }
   }
 
   toVisit_.push(point);
+  added_[point.x][point.y] = true;
 }
 
 /**
@@ -82,7 +82,7 @@ Point DFS::pop() {
   /** @todo [Part 1] */
   Point toReturn = toVisit_.top();
   toVisit_.pop();
-  visited_.push_back(toReturn);
+  visited_[toReturn.x][toReturn.y] = true;
   return toReturn;
 }
 

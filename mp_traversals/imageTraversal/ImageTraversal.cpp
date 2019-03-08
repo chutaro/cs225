@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iterator>
 #include <iostream>
+#include <vector>
 
 #include "../cs225/HSLAPixel.h"
 #include "../cs225/PNG.h"
@@ -20,6 +21,8 @@ ImageTraversal::ImageTraversal(const PNG & png, const Point & start, double tole
   png_ = png;
   start_ = start;
   tolerance_ = tolerance;
+  visited_ = std::vector<std::vector<bool>>(png_.width(), std::vector<bool>(png_.height(), false));
+  added_ = std::vector<std::vector<bool>>(png_.width(), std::vector<bool>(png_.height(), false));
 }
 
 double ImageTraversal::calculateDelta(const HSLAPixel & p1, const HSLAPixel & p2) {

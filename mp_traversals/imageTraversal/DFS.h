@@ -6,7 +6,7 @@
 
 #include <iterator>
 #include <cmath>
-#include <list>
+#include <vector>
 #include <stack>
 
 #include "../cs225/PNG.h"
@@ -36,5 +36,4 @@ private:
 	/** @todo [Part 1] */
 	/** add private members here*/
   std::stack<Point> toVisit_;
-  std::list<Point> visited_;
 };
