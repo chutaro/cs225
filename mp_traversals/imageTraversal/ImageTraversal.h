@@ -37,7 +37,6 @@ public:
     /** @todo [Part 1] */
     /** add member functions if neccesary*/
     Iterator(ImageTraversal *traversal, bool stop);
-    void toStop();
 
   private:
     /** @todo [Part 1] */

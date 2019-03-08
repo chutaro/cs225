@@ -30,8 +30,9 @@ FloodFilledImage::FloodFilledImage(const PNG & png) {
  */
 void FloodFilledImage::addFloodFill(ImageTraversal & traversal, ColorPicker & colorPicker) {
   /** @todo [Part 2] */
-  travs_.push_back(traversal);
-  pickers_.push_back(colorPicker);
+  travs_.push_back(&traversal);
+  pickers_.push_back(&colorPicker);
+  std::cout << __LINE__ << ": new flood added" << std::endl;
 }
 
 /**
@@ -59,12 +60,13 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
   int count = 0;
   animation.addFrame(image_);
 
-  for (const Point & p : travs_[0]) {
+  for (const Point & p : *travs_[0]) {
     count++;
-    image_.getPixel(p.x, p.y) = pickers_[0].getColor(p.x, p.y);
+    image_.getPixel(p.x, p.y) = pickers_[0]->getColor(p.x, p.y);
     if (count % frameInterval == 0) {
       animation.addFrame(image_);
     }
+    //std::cout << __LINE__ << ": pixel changed " << count << std::endl;
   }
 
   if (count % frameInterval != 0) {
