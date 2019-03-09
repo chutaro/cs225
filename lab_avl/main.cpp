@@ -212,7 +212,7 @@ int main(int argc, char** argv)
     testRotateRight();
     testRotateLeftRight();
     testRotateRightLeft();
-    testManyInsertions();
-    testManyRemovals();
+    //testManyInsertions();
+    //testManyRemovals();
     return 0;
 }
