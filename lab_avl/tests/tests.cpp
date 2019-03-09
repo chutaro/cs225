@@ -101,10 +101,12 @@ TEST_CASE("test_remove_small", "[weight=5]") {
     for (auto e : elems) {
         tree.insert(e, "");
     }
+    tree.print();
 
     for (int i = 0; i < 4; i++) {
         tree.remove(i);
     }
+    tree.print();
 
     vector<int> solnTraversal = {5, 8};
     vector<string> solnFuncCalls = {

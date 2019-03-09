@@ -73,19 +73,35 @@ void AVLTree<K, V>::rebalance(Node*& subtree)
     if (subtree == NULL) {
       return;
     }
-    if (subtree->height < 2) {
+    if (subtree->left == NULL && subtree->right == NULL) {
+      // height is already set to 0.
       return;
     }
+
     int balance;
     int balanceL;
     int balanceR;
+
+    // update height and balance
     if (subtree->left == NULL) {
+      subtree->height = subtree->right->height + 1;
       balance = 2;
     } else if (subtree->right == NULL) {
+      subtree->height = subtree->left->height + 1;
       balance = -2;
+    } else if (subtree->left->height > subtree->right->height) {
+      subtree->height = subtree->left->height + 1;
+      balance = subtree->right->height - subtree->left->height;
     } else {
+      subtree->height = subtree->right->height + 1;
       balance = subtree->right->height - subtree->left->height;
     }
+
+    // the case no need to rebalance
+    if (subtree->height < 2) {
+      return;
+    }
+
     if (balance == 2) {
       if (subtree->right->left == NULL) {
         balanceR = 1;
@@ -146,12 +162,9 @@ void AVLTree<K, V>::insert(Node*& subtree, const K& key, const V& value)
     if (key < subtree->key) {
       if (subtree->left == NULL) {
         subtree->left = new Node(key, value);
-        if (subtree->height == 0) {
-          subtree->height = 1;
-        }
+        rebalance(subtree);
         return;
       } else {
-        subtree->height += 1;
         insert(subtree->left, key, value);
         //std::cout << "rotate: " << subtree->key << std::endl;
         rebalance(subtree);
@@ -159,12 +172,9 @@ void AVLTree<K, V>::insert(Node*& subtree, const K& key, const V& value)
     } else {
       if (subtree->right == NULL) {
         subtree->right = new Node(key, value);
-        if (subtree->height == 0) {
-          subtree->height = 1;
-        }
+        rebalance(subtree);
         return;
       } else {
-        subtree->height += 1;
         insert(subtree->right, key, value);
         //std::cout << "rotate: " << subtree->key << std::endl;
         rebalance(subtree);
@@ -186,18 +196,43 @@ void AVLTree<K, V>::remove(Node*& subtree, const K& key)
 
     if (key < subtree->key) {
         // your code here
+        remove(subtree->left, key);
+        rebalance(subtree);
     } else if (key > subtree->key) {
         // your code here
+        remove(subtree->right, key);
+        rebalance(subtree);
     } else {
         if (subtree->left == NULL && subtree->right == NULL) {
             /* no-child remove */
             // your code here
+            delete subtree;
+            subtree = NULL;
         } else if (subtree->left != NULL && subtree->right != NULL) {
             /* two-child remove */
             // your code here
+            Node* iop = subtree->left;
+            while (iop->right != NULL) {
+              iop = iop->right;
+            }
+            swap(iop, subtree);
+            remove(subtree->left, key);
+            rebalance(subtree);
         } else {
             /* one-child remove */
             // your code here
+            if (subtree->left != NULL) {
+              Node* temp = subtree->left;
+              delete subtree;
+              subtree = temp;
+              rebalance(subtree);
+            }
+            if (subtree->right != NULL) {
+              Node* temp = subtree->right;
+              delete subtree;
+              subtree = temp;
+              rebalance(subtree);
+            }
         }
         // your code here
     }
