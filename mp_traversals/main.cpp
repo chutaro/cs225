@@ -21,48 +21,35 @@ int main() {
   // - The code provided below produces the `myFloodFill.png` file you must
   //   submit Part 3 of this assignment -- uncomment it when you're ready.
 
-  PNG png;      png.readFromFile("illinois.png");
+  PNG png;
+  png.readFromFile("usa.png");
 
   FloodFilledImage image(png);
-  BFS red1(png, Point(50, 150), 0.2);
-  BFS red2(png, Point(50, 75), 0.2);
-  BFS red3(png, Point(80, 150), 0.2);
-  BFS red4(png, Point(100, 200), 0.2);
-  BFS red5(png, Point(70, 40), 0.2);
-  BFS red6(png, Point(100, 75), 0.2);
-  BFS red7(png, Point(140, 170), 0.2);
-  BFS red8(png, Point(160, 200), 0.2);
-  // BFS bfs2(png, Point(450, 175), 0.2);
-  // BFS bfs2(png, Point(450, 175), 0.2);
-  // BFS bfs2(png, Point(450, 175), 0.2);
-  // BFS bfs2(png, Point(450, 175), 0.2);
-  // BFS bfs2(png, Point(450, 175), 0.2);
-  // BFS bfs2(png, Point(450, 175), 0.2);
-  HSLAPixel red(0, 1, 0.5);
+  BFS left(png, Point(20, 300), 0.2);
+  BFS top(png, Point(300, 10), 0.2);
+  BFS top2(png, Point(5, 5), 0.2);
+  BFS right(png, Point(500, 200), 0.2);
+  BFS up(png, Point(300, 80), 0.2);
+  BFS down(png, Point(350, 400), 0.2);
+
+  HSLAPixel yellow(45, 1, 0.5);
   HSLAPixel blue(240, 1, 0.5);
-  HSLAPixel green(120, 1, 0.5);
-  SolidColorPicker reds(red);
+  SolidColorPicker yellows(yellow);
   SolidColorPicker blues(blue);
-  SolidColorPicker greens(green);
-  image.addFloodFill( red1, reds );
-  image.addFloodFill( red2, reds );
-  image.addFloodFill( red3, reds );
-  image.addFloodFill( red4, reds );
-  image.addFloodFill( red5, reds );
-  image.addFloodFill( red6, reds );
-  image.addFloodFill( red7, reds );
-  image.addFloodFill( red8, reds );
 
+  MyColorPicker sea("sea.png");
+  MyColorPicker flag("flag.png");
+  MyColorPicker canyon("canyon.png");
+  MyColorPicker trump("trump.png");
 
-  // PNG png;       png.readFromFile("world_map.png");
-  //
-  // FloodFilledImage image(png);
-  // DFS dfs(png, Point(100, 100), 0.05);
-  // HSLAPixel color(231, 1, 0.5);
-  // SolidColorPicker solid(color);
-  // image.addFloodFill( dfs, solid );
+  image.addFloodFill( left, sea );
+  image.addFloodFill( top, flag );
+  image.addFloodFill( down, sea );
+  image.addFloodFill( top2, flag );
+  image.addFloodFill( right, canyon );
+  image.addFloodFill( up, trump );
 
-  Animation animation = image.animate(1000);
+  Animation animation = image.animate(10000);
 
   PNG lastFrame = animation.getFrame( animation.frameCount() - 1 );
   lastFrame.writeToFile("myFloodFill.png");
