@@ -44,6 +44,36 @@ PNG getTestPNG_8x4() {
   return png;
 }
 
+// PNG getTestPNG_8x8() {
+//   PNG png(8, 8);
+//   HSLAPixel blackPixel(180, 1, 0);
+//
+//   for (unsigned i = 1; i < 7; i++) {
+//     png.getPixel(1, i) = blackPixel;
+//   }
+//   for (unsigned i = 2; i < 5; i++) {
+//     png.getPixel(3, i) = blackPixel;
+//   }
+//   png.getPixel(4, 2) = blackPixel;
+//   png.getPixel(5, 2) = blackPixel;
+//   png.getPixel(5, 6) = blackPixel;
+//   png.getPixel(5, 7) = blackPixel;
+//   png.getPixel(6, 6) = blackPixel;
+//
+//   return png;
+// }
+//
+// TEST_CASE("DFS iterator visits all points in the correct order (8x8 image)", "[weight=1][part=1]") {
+//   PNG png = getTestPNG_8x8();
+//   Point startPoint(0, 0);
+//
+//   DFS t(png, startPoint, 0.2);
+//   ImageTraversal::Iterator it = t.begin();
+//   for (const Point & p : t) {
+//     std::cout << p << std::endl;
+//   }
+// }
+
 TEST_CASE("DFS iterator visits all points in the correct order (7x4 image)", "[weight=1][part=1]") {
   PNG png = getTestPNG_8x4();
   Point startPoint(2, 2);

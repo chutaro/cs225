@@ -66,7 +66,15 @@ Animation FloodFilledImage::animate(unsigned frameInterval) const {
       if (count % frameInterval == 0) {
         animation.addFrame(image_);
       }
-      //std::cout << __LINE__ << ": pixel changed " << count << std::endl;
+      if (count == 10000) {
+        std::cout << " 10000 done" << std::endl;
+      }
+      if (count == 20000) {
+        std::cout << " 20000 done" << std::endl;
+      }
+      if (count == 50000) {
+        std::cout << " 50000 done" << std::endl;
+      }
     }
 
     if (count % frameInterval != 0) {
