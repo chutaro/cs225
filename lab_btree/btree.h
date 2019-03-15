@@ -37,9 +37,7 @@ class BTree
          * @param key The key of the pair.
          * @param value The value of the pair.
          */
-        DataPair(K key, V value) : key(key), value(value)
-        {
-        }
+        DataPair(K key, V value) : key(key), value(value) {}
 
         /**
          * Less than operator for a DataPair. The object is less than another
@@ -342,8 +340,12 @@ template <class T, class C>
 size_t insertion_idx(const std::vector<T>& elements, const C& val)
 {
     /* TODO Your code goes here! */
-
-    return 5;
+    for (size_t i = 0; i < elements.size(); i++) {
+      if (val < elements[i] || val == elements[i]) {
+        return i;
+      }
+    }
+    return elements.size();
 }
 
 #include "btree_given.cpp"
