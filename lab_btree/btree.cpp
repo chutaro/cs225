@@ -1,3 +1,4 @@
+#include <iostream>
 /**
  * @file btree.cpp
  * Implementation of a B-tree class which can be used as a generic dictionary
@@ -13,6 +14,7 @@
 template <class K, class V>
 V BTree<K, V>::find(const K& key) const
 {
+
     return root == nullptr ? V() : find(root, key);
 }
 
@@ -149,7 +151,19 @@ void BTree<K, V>::split_child(BTreeNode* parent, size_t child_idx)
 
 
     /* TODO Your code goes here! */
-    parent.insert(child_itr, new_right);
+    parent->children.insert(child_itr, new_right);
+    parent->elements.insert(elem_itr, child->elements[mid_elem_idx]);
+
+    // right
+    new_right->elements.assign(mid_elem_itr+1, child->elements.end());
+    if (!new_right->is_leaf) {
+      new_right->children.assign(mid_child_itr, child->children.end());
+    }
+    // left
+    new_left->elements.assign(child->elements.begin(), mid_elem_itr);
+    if (!new_left->is_leaf) {
+      new_left->children.assign(child->children.begin(), mid_child_itr);
+    }
 }
 
 /**
