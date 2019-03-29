@@ -4,7 +4,7 @@
  */
 
 #include "schashtable.h"
- 
+
 template <class K, class V>
 SCHashTable<K, V>::SCHashTable(size_t tsize)
 {
@@ -54,6 +54,8 @@ void SCHashTable<K, V>::insert(K const& key, V const& value)
      * @todo Implement this function.
      *
      */
+    unsigned idx = hash(key, size);
+    elems++;
 }
 
 template <class K, class V>
