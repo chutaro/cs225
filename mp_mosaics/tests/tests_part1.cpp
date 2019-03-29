@@ -43,7 +43,7 @@ bool tree_equals_output(stringstream & s, string filename)
     return true;
 }
 
-void compareBinaryFiles( string yourFile, string ourFile ) 
+void compareBinaryFiles( string yourFile, string ourFile )
 {
     ifstream ourBinary( ourFile, ios::binary );
     stringstream ours;
@@ -79,6 +79,33 @@ TEST_CASE("KDTree::shouldReplace Tests", "[weight=1][part=1]") {
   REQUIRE( tree.shouldReplace(target, currentBest1, possibleBest1) == true );
   REQUIRE( tree.shouldReplace(target, currentBest2, possibleBest2) == false );
   REQUIRE( tree.shouldReplace(target, currentBest3, possibleBest3) == false );  // operator<
+}
+
+TEST_CASE("quick sort Tests", "[weight=1][part=1]") {
+  vector<Point<2>> pts;
+  KDTree<2> tree(pts);
+
+  Point<2> a(3,2); pts.push_back(a);
+  Point<2> b(5,8); pts.push_back(b);
+  Point<2> c(6,1); pts.push_back(c);
+  Point<2> d(9,0); pts.push_back(d);
+  Point<2> e(4,4); pts.push_back(e);
+  Point<2> f(1,1); pts.push_back(f);
+  Point<2> g(2,2); pts.push_back(g);
+  Point<2> h(8,7); pts.push_back(h);
+
+  std::cout << "---- test partition ------" << std::endl;
+  std::cout << tree.partition_(pts, 0, 7, 0) << std::endl;
+  for (Point<2> p : pts) {
+    std::cout << p << std::endl;
+  }
+
+  std::cout << "---- test sellect ------" << std::endl;
+  std::cout << "mid point: " << tree.selectMid_(pts, 0, 7, 2, 0) << std::endl;
+  for (Point<2> p : pts) {
+    std::cout << p << std::endl;
+  }
+  //REQUIRE( tree.shouldReplace(target, currentBest3, possibleBest3) == false );  // operator<
 }
 
 

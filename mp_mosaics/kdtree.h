@@ -132,7 +132,8 @@ class KDTree
      * up into elements which are less than the median, or greater than
      * the median, and then the subtrees are created recursively.
      * The children pick the median in the next dimension, and repeat
-     * until the entire set of inputs has been processed. Successive
+     * until `
+     the entire set of inputs has been processed. Successive
      * levels of the tree split on increasing dimensions, modulo the
      * total number: a 3D tree will have levels split by dimension 0, 1, 2,
      * 0, 1, 2, etc.
@@ -172,6 +173,11 @@ class KDTree
      * Destructor for KDTree.
      */
     ~KDTree();
+
+    // Helper function
+    int partition_(vector<Point<Dim>> &inputs, int start, int end, int dim);
+    Point<Dim> selectMid_(vector<Point<Dim>> &inputs, int start, int end, int midIdx, int dim);
+    KDTreeNode construct_(vector<Point<Dim>> inputs);
 
     /**
      * Finds the closest point to the parameter point in the KDTree.
@@ -248,6 +254,8 @@ class KDTree
     /** Internal representation, root and size **/
     KDTreeNode *root;
     size_t size;
+
+
 
     /** Helper function for grading */
     int getPrintData(KDTreeNode * subroot) const;

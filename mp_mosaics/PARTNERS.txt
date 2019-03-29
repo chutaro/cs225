@@ -1,2 +1,2 @@
-netid1
-netid2
+netid1 yutaroi2
+netid2 lucasa3
