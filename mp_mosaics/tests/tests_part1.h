@@ -48,6 +48,7 @@ void _test_linear_nearestNeighbor(int size) {
   }
 
   KDTree<K> tree(points);
+  tree.printTree(cout);
   for (int i = 0; i < size; i++) {
     REQUIRE ( tree.findNearestNeighbor(points[i]) == points[i] );
   }

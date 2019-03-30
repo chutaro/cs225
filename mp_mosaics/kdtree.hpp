@@ -97,11 +97,11 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::build_(vector<Point<Dim>> inputs,
   int midIdx = (start + end) / 2;
   Point<Dim> mid = selectMid_(inputs, 0, inputs.size() - 1, midIdx, dim);
   KDTreeNode *current = new KDTreeNode(mid);
-  //std::cout << "made a Node: " << mid << " dim: " << dim << std::endl;
+  std::cout << "made a Node: " << mid << " dim: " << dim << std::endl;
 
   // base case
   if (start == end) {
-    //std::cout << "base case: " << mid << " dim: " << dim << std::endl;
+    std::cout << "base case: " << mid << " dim: " << dim << std::endl;
     return current;
   }
 
@@ -147,44 +147,48 @@ Point<Dim> KDTree<Dim>::findNearestNeighbor(const Point<Dim>& query) const
      * @todo Implement this function!
      */
     Point<Dim> currBest = root->point;
-    help_neighbor_(query, root, currBest, 0);
-    return currBest;
+    return help_neighbor_(query, root, currBest, 0);
 }
 
 template <int Dim>
-void KDTree<Dim>::help_neighbor_(const Point<Dim>& query, KDTreeNode *current, Point<Dim> &currBest, int dim) const {
-
+Point<Dim> KDTree<Dim>::help_neighbor_(const Point<Dim>& query, KDTreeNode *current, Point<Dim> currBest, int dim) const {
   if (current == NULL) {
-    return;
+    return currBest;
   }
 
   if (current->left == NULL && current->right == NULL) {
     if (shouldReplace(query, currBest, current->point)) {
-      currBest = current->point;
+      std::cout << "leaf: " << current->point << std::endl;
+      return current->point;
     }
+    return currBest;
   }
 
   if (smallerDimVal(query, current->point, dim)) {
-    help_neighbor_(query, current->left, currBest, (dim+1)%Dim);
+    std::cout << "left: " << current->point << std::endl;
+    currBest = help_neighbor_(query, current->left, currBest, (dim+1)%Dim);
     if (shouldReplace(query, currBest, current->point)) {
       currBest = current->point;
     }
 
     double radiusSq = distanceSq(currBest, query);
     if ((current->point[dim] - query[dim])*(current->point[dim] - query[dim]) < radiusSq) {
-      help_neighbor_(query, current->right, currBest, (dim+1)%Dim);
+      currBest = help_neighbor_(query, current->right, currBest, (dim+1)%Dim);
     }
 
   } else {
-    help_neighbor_(query, current->right, currBest, (dim+1)%Dim);
+    std::cout << "right: " << current->point << std::endl;
+    currBest = help_neighbor_(query, current->right, currBest, (dim+1)%Dim);
     if (shouldReplace(query, currBest, current->point)) {
       currBest = current->point;
     }
     double radiusSq = distanceSq(currBest, query);
     if ((current->point[dim] - query[dim])*(current->point[dim] - query[dim]) < radiusSq) {
-      help_neighbor_(query, current->left, currBest, (dim+1)%Dim);
+      currBest = help_neighbor_(query, current->left, currBest, (dim+1)%Dim);
     }
   }
+  std::cout << "current: " << current->point << "currBest" << currBest << std::endl;
+  return currBest;
 
 }
 

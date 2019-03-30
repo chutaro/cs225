@@ -254,7 +254,7 @@ class KDTree
     int partition_(vector<Point<Dim>> &inputs, int start, int end, int dim);
     Point<Dim> selectMid_(vector<Point<Dim>> &inputs, int start, int end, int midIdx, int dim);
     KDTreeNode* build_(vector<Point<Dim>> inputs, int start, int end, int dim);
-    void help_neighbor_(const Point<Dim>& query, KDTreeNode *current, Point<Dim> &currBest, int dim) const;
+    Point<Dim> help_neighbor_(const Point<Dim>& query, KDTreeNode *current, Point<Dim> currBest, int dim) const;
     double distanceSq(const Point<Dim> first, const Point<Dim> second) const;
 
     /** Helper function for grading */
