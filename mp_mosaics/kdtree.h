@@ -177,7 +177,7 @@ class KDTree
     // Helper function
     int partition_(vector<Point<Dim>> &inputs, int start, int end, int dim);
     Point<Dim> selectMid_(vector<Point<Dim>> &inputs, int start, int end, int midIdx, int dim);
-    KDTreeNode construct_(vector<Point<Dim>> inputs);
+    KDTreeNode* build_(vector<Point<Dim>> inputs, int start, int end, int dim);
 
     /**
      * Finds the closest point to the parameter point in the KDTree.

@@ -122,15 +122,15 @@ TEST_CASE("quick sort Tests", "[weight=1][part=1]") {
 //           p[j] = i;
 //       points.push_back(p);
 //   }
-
+//
 //   KDTree<K> tree(points);
-
+//
 //   std::string fname = "test_result_kdtree_"+to_string(size)+".kd";
-
+//
 //   ofstream outputFile(fname, ofstream::out);
 //   tree.printTree(outputFile, colored_out::DISABLE, -1);
 //   outputFile.close();
-
+//
 //   compareBinaryFiles(fname, "tests/expected_kdtree_"+to_string(size)+".kd" );
 // }
 

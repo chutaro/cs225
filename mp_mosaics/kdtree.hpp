@@ -47,14 +47,12 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
     /**
      * @todo Implement this function!
      */
+    root = build_(newPoints, 0, newPoints.size()-1, 0);
 }
 
 //helper function to partition the given vector.
 template <int Dim>
 int KDTree<Dim>::partition_(vector<Point<Dim>> &inputs, int start, int end, int dim) {
-  // std::cout << "pivot: " << inputs[pivotIdx] << std::endl;
-  // std::cout << "start: " << inputs[start] << std::endl;
-  // std::cout << "end: " << inputs[end] << std::endl;
 
   int pivotIdx = (start + end) / 2;
   int storeIdx = start;
@@ -87,12 +85,36 @@ Point<Dim> KDTree<Dim>::selectMid_(vector<Point<Dim>> &inputs, int start, int en
   }
 }
 
-// // helper function to construct kdtree
-// template <int Dim>
-// KDTree<Dim>::KDTreeNode KDTree<Dim>::construct_(vector<Point<Dim>> inputs) {
-//   Point<Dim> mid = selectMid_(inputs, 0, inputs.size() - 1, )
-//   KDTreeNode *current = new KDTreeNode()
-// }
+// helper function to construct kdtree
+template <int Dim>
+typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::build_(vector<Point<Dim>> inputs, int start, int end, int dim) {
+
+  // check if it's empty
+  if (inputs.empty()) {
+    return new KDTreeNode();
+  }
+
+  int midIdx = (start + end) / 2;
+  Point<Dim> mid = selectMid_(inputs, 0, inputs.size() - 1, midIdx, dim);
+  KDTreeNode *current = new KDTreeNode(mid);
+  std::cout << "made a Node: " << mid << " dim: " << dim << std::endl;
+
+  // base case
+  if (start == end) {
+    std::cout << "base case: " << mid << " dim: " << dim << std::endl;
+    return current;
+  }
+
+  // else
+  dim = (dim + 1) % Dim;
+  if (start <= midIdx-1) {
+    current->left = build_(inputs, start, midIdx-1, dim);
+  }
+  if (end >= midIdx+1) {
+    current->right = build_(inputs, midIdx+1, end, dim);
+  }
+  return current;
+}
 
 template <int Dim>
 KDTree<Dim>::KDTree(const KDTree<Dim>& other) {
