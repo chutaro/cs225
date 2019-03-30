@@ -174,11 +174,6 @@ class KDTree
      */
     ~KDTree();
 
-    // Helper function
-    int partition_(vector<Point<Dim>> &inputs, int start, int end, int dim);
-    Point<Dim> selectMid_(vector<Point<Dim>> &inputs, int start, int end, int midIdx, int dim);
-    KDTreeNode* build_(vector<Point<Dim>> inputs, int start, int end, int dim);
-
     /**
      * Finds the closest point to the parameter point in the KDTree.
      *
@@ -255,7 +250,12 @@ class KDTree
     KDTreeNode *root;
     size_t size;
 
-
+    // Helper functions
+    int partition_(vector<Point<Dim>> &inputs, int start, int end, int dim);
+    Point<Dim> selectMid_(vector<Point<Dim>> &inputs, int start, int end, int midIdx, int dim);
+    KDTreeNode* build_(vector<Point<Dim>> inputs, int start, int end, int dim);
+    void help_neighbor_(const Point<Dim>& query, KDTreeNode *current, Point<Dim> &currBest, int dim) const;
+    double distanceSq(const Point<Dim> first, const Point<Dim> second) const;
 
     /** Helper function for grading */
     int getPrintData(KDTreeNode * subroot) const;
