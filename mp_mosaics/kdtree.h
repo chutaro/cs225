@@ -233,6 +233,10 @@ class KDTree
      */
     Point<Dim> findNearestNeighbor(const Point<Dim>& query) const;
 
+    int getSize() {
+      return size;
+    }
+
     // functions used for grading:
 
     /**
@@ -256,6 +260,8 @@ class KDTree
     KDTreeNode* build_(vector<Point<Dim>> inputs, int start, int end, int dim);
     Point<Dim> help_neighbor_(const Point<Dim>& query, KDTreeNode *current, Point<Dim> currBest, int dim) const;
     double distanceSq(const Point<Dim> first, const Point<Dim> second) const;
+    KDTreeNode* copy_(KDTreeNode *other);
+    void destroy_(KDTreeNode *subtree);
 
     /** Helper function for grading */
     int getPrintData(KDTreeNode * subroot) const;

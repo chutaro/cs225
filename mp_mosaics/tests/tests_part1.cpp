@@ -101,7 +101,7 @@ TEST_CASE("KDTree::shouldReplace Tests", "[weight=1][part=1]") {
 //   }
 //
 //   std::cout << "---- test sellect ------" << std::endl;
-//   std::cout << "mid point: " << tree.selectMid_(pts, 0, 7, 2, 0) << std::endl;
+//   std::cout << "mid point: " << tree.selectMid_(pts, 0, 7, 3, 1) << std::endl;
 //   for (Point<2> p : pts) {
 //     std::cout << p << std::endl;
 //   }
@@ -139,7 +139,7 @@ TEST_CASE("KDTree constructor, 1D (Dim=1)", "[weight=1][part=1]") {
 
 TEST_CASE("KDTree constructor, 3D (Dim = 3)", "[weight=1][part=1]") {
   _test_linear_constructor<3>(31);
-  }
+}
 
 
 // //
@@ -162,13 +162,13 @@ TEST_CASE("KDTree constructor, 3D (Dim = 3)", "[weight=1][part=1]") {
 //   }
 // }
 
-// TEST_CASE("KDTree::findNearestNeighbor, exact match, 1D (Dim=1)", "[weight=1][part=1]") {
-//   _test_linear_nearestNeighbor<1>(10);
-// }
-//
-// TEST_CASE("KDTree::findNearestNeighbor, exact match, 3D (Dim=3)", "[weight=1][part=1]") {
-//   _test_linear_nearestNeighbor<3>(31);
-//   }
+TEST_CASE("KDTree::findNearestNeighbor, exact match, 1D (Dim=1)", "[weight=1][part=1]") {
+  _test_linear_nearestNeighbor<1>(10);
+}
+
+TEST_CASE("KDTree::findNearestNeighbor, exact match, 3D (Dim=3)", "[weight=1][part=1]") {
+  _test_linear_nearestNeighbor<3>(31);
+}
 
 
 /*****************************************
@@ -204,14 +204,26 @@ TEST_CASE("KDTree::findNearestNeighbor (2D), returns correct result", "[weight=1
       points.push_back(Point<2>(coords[i]));
   Point<2> target(targetCoords);
   Point<2> expected(expectedCoords);
-
   KDTree<2> tree(points);
+
+  // std::cout << "---- test partition ------" << std::endl;
+  // std::cout << tree.partition_(points, 0, 5, 0) << std::endl;
+  // for (Point<2> p : points) {
+  //   std::cout << p << std::endl;
+  // }
+  //
+  // std::cout << "---- test sellect ------" << std::endl;
+  // std::cout << "mid point: " << tree.selectMid_(points, 0, 5, 2, 0) << std::endl;
+  // for (Point<2> p : points) {
+  //   std::cout << p << std::endl;
+  // }
+
   tree.printTree(cout);
-  // int size = 2;
-  // int K = 2;
-  // std::string fname = "test_result_kdtree_"+to_string(K)+"_"+to_string(size)+".kd";
-  // writeKdTreeToFile(tree,fname);
-  // compareBinaryFiles(fname, "tests/expected_kdtree_"+to_string(K)+"_"+to_string(size)+".kd" );
+  int size = 2;
+  int K = 2;
+  std::string fname = "test_result_kdtree_"+to_string(K)+"_"+to_string(size)+".kd";
+  writeKdTreeToFile(tree,fname);
+  compareBinaryFiles(fname, "tests/expected_kdtree_"+to_string(K)+"_"+to_string(size)+".kd" );
 
 
   REQUIRE( tree.findNearestNeighbor(target) == expected );
@@ -281,6 +293,9 @@ TEST_CASE("KDTree::findNearestNeighbor (2D), testing correct path", "[weight=1][
 
     KDTree<2> tree(points);
     tree.printTree(cout);
+    std::cout << "----size----" << std::endl;
+    std::cout << tree.getSize() << std::endl;
+
 
     int size = 10;
     int K = 2;

@@ -48,6 +48,7 @@ KDTree<Dim>::KDTree(const vector<Point<Dim>>& newPoints)
      * @todo Implement this function!
      */
     root = build_(newPoints, 0, newPoints.size()-1, 0);
+    size = newPoints.size();
 }
 
 //helper function to partition the given vector.
@@ -95,13 +96,18 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::build_(vector<Point<Dim>> inputs,
   }
 
   int midIdx = (start + end) / 2;
-  Point<Dim> mid = selectMid_(inputs, 0, inputs.size() - 1, midIdx, dim);
+  Point<Dim> mid = selectMid_(inputs, start, end, midIdx, dim);
+
+  // for (Point<Dim> p : inputs) {
+  //   std::cout << p << std::endl;
+  // }
+
   KDTreeNode *current = new KDTreeNode(mid);
-  std::cout << "made a Node: " << mid << " dim: " << dim << std::endl;
+  //std::cout << "made a Node: " << mid << " dim: " << dim << std::endl;
 
   // base case
   if (start == end) {
-    std::cout << "base case: " << mid << " dim: " << dim << std::endl;
+    //std::cout << "base case: " << mid << " dim: " << dim << std::endl;
     return current;
   }
 
@@ -116,12 +122,37 @@ typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::build_(vector<Point<Dim>> inputs,
   return current;
 }
 
+// helper for copy ctor
+template <int Dim>
+typename KDTree<Dim>::KDTreeNode* KDTree<Dim>::copy_(KDTree<Dim>::KDTreeNode *other) {
+  if (other == NULL) {
+    return NULL;
+  }
+  KDTreeNode *result = new KDTreeNode(other->point);
+  result->left = copy_(other->left);
+  result->right = copy_(other->right);
+  return result;
+}
+
+// helper for dtor
+template <int Dim>
+void KDTree<Dim>::destroy_(KDTree<Dim>::KDTreeNode *subtree) {
+  if (subtree->left != NULL) {
+    destroy_(subtree->left);
+  }
+  if (subtree->right != NULL) {
+    destroy_(subtree->right);
+  }
+  delete subtree;
+}
+
 template <int Dim>
 KDTree<Dim>::KDTree(const KDTree<Dim>& other) {
   /**
    * @todo Implement this function!
    */
-
+   root = copy_(other.root);
+   size = other.size;
 }
 
 template <int Dim>
@@ -129,6 +160,9 @@ const KDTree<Dim>& KDTree<Dim>::operator=(const KDTree<Dim>& rhs) {
   /**
    * @todo Implement this function!
    */
+  destroy_(root);
+  root = copy_(rhs.root);
+  size = rhs.size;
 
   return *this;
 }
@@ -138,6 +172,8 @@ KDTree<Dim>::~KDTree() {
   /**
    * @todo Implement this function!
    */
+  destroy_(root);
+  size = 0;
 }
 
 template <int Dim>
@@ -158,36 +194,36 @@ Point<Dim> KDTree<Dim>::help_neighbor_(const Point<Dim>& query, KDTreeNode *curr
 
   if (current->left == NULL && current->right == NULL) {
     if (shouldReplace(query, currBest, current->point)) {
-      std::cout << "leaf: " << current->point << std::endl;
+      //std::cout << "leaf: " << current->point << std::endl;
       return current->point;
     }
     return currBest;
   }
 
   if (smallerDimVal(query, current->point, dim)) {
-    std::cout << "left: " << current->point << std::endl;
+    //std::cout << "left: " << current->point << std::endl;
     currBest = help_neighbor_(query, current->left, currBest, (dim+1)%Dim);
     if (shouldReplace(query, currBest, current->point)) {
       currBest = current->point;
     }
 
     double radiusSq = distanceSq(currBest, query);
-    if ((current->point[dim] - query[dim])*(current->point[dim] - query[dim]) < radiusSq) {
+    if ((current->point[dim] - query[dim])*(current->point[dim] - query[dim]) <= radiusSq) {
       currBest = help_neighbor_(query, current->right, currBest, (dim+1)%Dim);
     }
 
   } else {
-    std::cout << "right: " << current->point << std::endl;
+    //std::cout << "right: " << current->point << std::endl;
     currBest = help_neighbor_(query, current->right, currBest, (dim+1)%Dim);
     if (shouldReplace(query, currBest, current->point)) {
       currBest = current->point;
     }
     double radiusSq = distanceSq(currBest, query);
-    if ((current->point[dim] - query[dim])*(current->point[dim] - query[dim]) < radiusSq) {
+    if ((current->point[dim] - query[dim])*(current->point[dim] - query[dim]) <= radiusSq) {
       currBest = help_neighbor_(query, current->left, currBest, (dim+1)%Dim);
     }
   }
-  std::cout << "current: " << current->point << "currBest" << currBest << std::endl;
+  //std::cout << "current: " << current->point << "currBest" << currBest << std::endl;
   return currBest;
 
 }
