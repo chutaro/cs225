@@ -32,6 +32,7 @@ MosaicCanvas* mapTiles(SourceImage const& theSource,
     vector<Point<3>> points;
     for (TileImage tile : theTiles) {
       Point<3> point = convertToXYZ(tile.getAverageColor());
+      std::cout << __LINE__ << std::endl;
       points.push_back(point);
       map[point] = &tile;
     }
