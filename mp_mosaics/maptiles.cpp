@@ -30,23 +30,28 @@ MosaicCanvas* mapTiles(SourceImage const& theSource,
 
     map<Point<3>, TileImage*> map;
     vector<Point<3>> points;
-    for (TileImage tile : theTiles) {
-      Point<3> point = convertToXYZ(tile.getAverageColor());
-      std::cout << __LINE__ << std::endl;
+
+    // i dont know why it is wrong
+    // for (TileImage tile : theTiles) {
+    //   Point<3> point = convertToXYZ(tile.getAverageColor());
+    //   points.push_back(point);
+    //   map[point] = &tile;
+    // }
+
+    for (unsigned i = 0; i < theTiles.size();i++) {
+      Point<3> point = convertToXYZ(theTiles[i].getAverageColor());
       points.push_back(point);
-      map[point] = &tile;
+      map[point] = &theTiles[i];
     }
 
     KDTree<3> tree(points);
 
     for (int i = 0; i < row; i++) {
-      for (int j = 0; i < column; j++) {
+      for (int j = 0; j < column; j++) {
         Point<3> regionColor = convertToXYZ(theSource.getRegionColor(i, j));
         Point<3> nearest = tree.findNearestNeighbor(regionColor);
-
         canvas->setTile(i, j, map[nearest]);
       }
     }
-
     return canvas;
 }

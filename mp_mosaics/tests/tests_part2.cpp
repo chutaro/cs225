@@ -55,8 +55,10 @@ TEST_CASE("Creates a basic MosaicCanvas (gridtest)", "[weight=5][part=2]") {
   // Draw the mosaic!
   MosaicCanvas* canvas = mapTiles(source, tileList);
   REQUIRE( canvas != NULL );
+  std::cout << __LINE__ << std::endl;
 
   PNG actual = canvas->drawMosaic(10);
+  std::cout << __LINE__ << std::endl;
   PNG expected;  expected.readFromFile("tests/gridtest-expected.png");
 
   // Save and check for correctness
