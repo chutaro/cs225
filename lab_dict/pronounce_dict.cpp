@@ -23,6 +23,9 @@ using std::istream;
 using std::istream_iterator;
 using std::stringstream;
 
+using std::cout;
+using std::endl;
+
 /**
  * Constructs a PronounceDict from a CMU pronunciation dictionary
  * file. See http://www.speech.cs.cmu.edu/cgi-bin/cmudict .
@@ -75,5 +78,14 @@ PronounceDict::PronounceDict(const map<string, vector<string>>& pronun_dict)
 bool PronounceDict::homophones(const string& word1, const string& word2) const
 {
     /* Your code goes here! */
-    return true;
+    string str1 = word1;
+    string str2 = word2;
+    std::transform(str1.begin(), str1.end(), str1.begin(), ::toupper);
+    std::transform(str2.begin(), str2.end(), str2.begin(), ::toupper);
+    if (dict.find(str1) != dict.end() && dict.find(str2) != dict.end()) {
+      if (dict.at(str1) == dict.at(str2)) {
+        return true;
+      }
+    }
+    return false;
 }
