@@ -22,21 +22,19 @@ void SquareMaze::makeMaze(int width, int height) {
   height_ = height;
   rights_ = vector<vector<bool>>(width_, vector<bool>(height_, true));
   bottoms_ = vector<vector<bool>>(width_, vector<bool>(height_, true));
-
   int numOfCells = width_ * height_;
   dsets_.addelements(numOfCells);
 
-  while (dsets_.size(50) != numOfCells) {
+  while (dsets_.size(0) != numOfCells) {
 
     int rX = rand() % width_;
     int rY = rand() % height_;
     int rWall = rand() % 2;
-
-    if (dsets_.size(0) > 1 && dsets_.size(0) < width_*height_-5) {
-      cout << "current size: " << dsets_.size(24) << endl;
-      cout << "x: " << rX << endl;
-      cout << "y: " << rY << endl;
-    }
+    // if (dsets_.size(0) > 1 && dsets_.size(0) < width_*height_-5) {
+    //   cout << "current size: " << dsets_.size(24) << endl;
+    //   cout << "x: " << rX << endl;
+    //   cout << "y: " << rY << endl;
+    // }
 
     if (rWall == 0) {
       // check if the wall exists, (true)
@@ -45,7 +43,6 @@ void SquareMaze::makeMaze(int width, int height) {
         if (rX == width_-1) {
           continue;
         }
-
         int current = width_*rY + rX;
         int next = width_*rY + rX+1;
         // check if there are no risk of generating a cycle,
@@ -62,12 +59,11 @@ void SquareMaze::makeMaze(int width, int height) {
         if (rY == height_-1) {
           continue;
         }
-
         int current = width_*rY + rX;
         int next = width_*(rY+1) + rX;
         // check if there are no risk of generating a cycle,
         if (dsets_.find(current) != dsets_.find(next)) {
-          rights_[rX][rY] = false;
+          bottoms_[rX][rY] = false;
           dsets_.setunion(current, next);
         }
       }
@@ -142,8 +138,29 @@ vector<int> SquareMaze::solveMaze() {
 
 // Draws the maze without the solution.
 PNG* SquareMaze::drawMaze() const {
-  PNG* test = new PNG();
-  return test;
+  PNG* out = new PNG(width_*10 + 1, height_*10 + 1);
+  for (unsigned i = 0; i < out->height(); i++) {
+    out->getPixel(0, i).l = 0;
+  }
+  for (unsigned i = 10; i < out->width(); i++) {
+    out->getPixel(i, 0).l = 0;
+  }
+
+  for (int x = 0; x < width_; x++) {
+    for (int y = 0; y < height_; y++) {
+      if (rights_[x][y]) {
+        for (unsigned k = 0; k <= 10; k++) {
+          out->getPixel((x+1)*10, y*10 + k).l = 0;
+        }
+      }
+      if (bottoms_[x][y]) {
+        for (unsigned k = 0; k <= 10; k++) {
+          out->getPixel(x*10 + k, (y+1)*10).l = 0;
+        }
+      }
+    }
+  }
+  return out;
 }
 
 // This function calls drawMaze, then solveMaze; it modifies the PNG from
