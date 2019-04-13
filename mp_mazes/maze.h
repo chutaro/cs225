@@ -43,7 +43,7 @@ public:
 private:
   int width_;
   int height_;
-  bool *rights_;
-  bool *bottoms_;
+  vector<vector<bool>> rights_;
+  vector<vector<bool>> bottoms_;
   DisjointSets dsets_;
 };
