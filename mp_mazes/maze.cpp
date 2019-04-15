@@ -3,10 +3,16 @@
 #include "cs225/PNG.h"
 #include "maze.h"
 #include <vector>
+#include <stack>
 #include <iostream>
+#include <stdio.h>
 #include <stdlib.h>
+#include <random>
 
 using std::vector;
+using std::stack;
+using std::pair;
+using std::make_pair;
 using std::cout;
 using std::endl;
 using cs225::PNG;
@@ -25,13 +31,14 @@ void SquareMaze::makeMaze(int width, int height) {
   int numOfCells = width_ * height_;
   dsets_.addelements(numOfCells);
 
+  std::random_device rnd;
+  srand(rnd());
   while (dsets_.size(0) != numOfCells) {
-
     int rX = rand() % width_;
     int rY = rand() % height_;
     int rWall = rand() % 2;
     // if (dsets_.size(0) > 1 && dsets_.size(0) < width_*height_-5) {
-    //   cout << "current size: " << dsets_.size(24) << endl;
+    //   cout << "current size: " << dsets_.size(0) << endl;
     //   cout << "x: " << rX << endl;
     //   cout << "y: " << rY << endl;
     // }
@@ -69,7 +76,6 @@ void SquareMaze::makeMaze(int width, int height) {
       }
     }
   }
-  // now it's done
 }
 
 
@@ -78,11 +84,11 @@ void SquareMaze::makeMaze(int width, int height) {
 // dir = 2 represents a leftward step (-1 to the x coordinate)
 // dir = 3 represents an upward step (-1 to the y coordinate)
 bool SquareMaze::canTravel(int x, int y, int dir) const {
-  if (x >= width_ || x < 0 || y >= height_ || y < 0 || dir < 0 || dir >= 3) {
-    return false;
-  }
+  // if (x >= width_ || x < 0 || y >= height_ || y < 0 || dir < 0 || dir > 3) {
+  //   return false;
+  // }
   if (dir == 0) {
-    if (x == width_ - 1) {
+    if (x >= width_ - 1) {
       return false;
     }
     if (rights_[x][y]) {
@@ -91,7 +97,7 @@ bool SquareMaze::canTravel(int x, int y, int dir) const {
     return true;
   }
   else if (dir == 1) {
-    if (y == width_ - 1) {
+    if (y >= width_ - 1) {
       return false;
     }
     if (bottoms_[x][y]) {
@@ -100,7 +106,7 @@ bool SquareMaze::canTravel(int x, int y, int dir) const {
     return true;
   }
   else if (dir == 2) {
-    if (x == 0) {
+    if (x <= 0) {
       return false;
     }
     if (rights_[x-1][y]) {
@@ -109,7 +115,7 @@ bool SquareMaze::canTravel(int x, int y, int dir) const {
     return true;
   }
   else {
-    if (y == 0) {
+    if (y <= 0) {
       return false;
     }
     if (bottoms_[x][y-1]) {
@@ -130,9 +136,80 @@ void SquareMaze::setWall(int x, int y, int dir, bool exists) {
 
 // Solves this SquareMaze.
 vector<int> SquareMaze::solveMaze() {
-  int max = 0;
-  vector<int> test;
-  return test;
+
+  vector<int> path;
+  vector<int> longestPath;
+  int destinationX;
+  stack< pair<int, int> > stack;
+  vector<vector<bool>> visited(width_, vector<bool>(height_, false));
+
+  int x = 0;
+  int y = 0;
+  //int count = 0;
+  stack.push(make_pair(x, y));
+
+  while (!stack.empty()) {
+      x = stack.top().first;
+      y = stack.top().second;
+      stack.pop();
+
+      // cout << "point: " << x << ", " << y << endl;
+      // cout << "path: ";
+      // for (size_t i = 0; i < path.size(); i++) {
+      //   cout << path[i] << " ";
+      // }
+      // cout << endl;
+
+      if (visited[x][y] == true) {
+        path.pop_back();
+        continue;
+      }
+      visited[x][y] = true;
+
+      if (y == width_-1) {
+        if (path.size() > longestPath.size()) {
+          longestPath = path;
+          destinationX = x;
+        }
+        if (path.size() == longestPath.size() && x < destinationX) {
+          longestPath = path;
+          destinationX = x;
+        }
+      }
+
+      int potential = 0;
+      if (canTravel(x, y, 0)) {
+        stack.push(make_pair(x+1, y));
+        path.push_back(0);
+        potential++;
+      }
+      if (canTravel(x, y, 1)) {
+        stack.push(make_pair(x, y+1));
+        path.push_back(1);
+        potential++;
+      }
+      if (canTravel(x, y, 2)) {
+        stack.push(make_pair(x-1, y));
+        path.push_back(2);
+        potential++;
+      }
+      if (canTravel(x, y, 3)) {
+        stack.push(make_pair(x, y-1));
+        path.push_back(3);
+        potential++;
+      }
+      // if (potential >= 3) {
+      //   count = 0;
+      // }
+
+      // if (potential == 1) {
+      //   for (int i = 0; i < count; i++) {
+      //     path.pop_back();
+      //   }
+      // }
+  }
+
+  return longestPath;
 }
 
 
@@ -166,6 +243,52 @@ PNG* SquareMaze::drawMaze() const {
 // This function calls drawMaze, then solveMaze; it modifies the PNG from
 // drawMaze to show the solution vector and the exit.
 PNG* SquareMaze::drawMazeWithSolution() {
-  PNG* test = new PNG();
-  return test;
+  PNG* result = drawMaze();
+  vector<int> solution = solveMaze();
+
+  // cout << "result" << endl;
+  // for (size_t i = 0; i < solution.size(); i++) {
+  //   cout << i << ": " << solution[i] << endl;
+  // }
+
+  cs225::HSLAPixel* red = new cs225::HSLAPixel(0,1,0.5,1); // red pixel
+
+  // initial location
+  int x = 5;
+  int y = 5;
+
+  // drawing solution, x 10??
+  for (size_t i = 0; i < solution.size();i++) {
+    if (solution[i] == 0) {
+      for (int j = 0; j <= 10;j++) {
+        result->getPixel(x+j,y) = *red;
+      }
+      x += 10;
+    }
+    if (solution[i] == 1) {
+      for (int j = 0; j <= 10;j++) {
+        result->getPixel(x,y+j) = *red;
+      }
+      y += 10;
+    }
+    if (solution[i] == 2) {
+      for (int j = 0; j <= 10;j++) {
+        result->getPixel(x-j,y) = *red;
+      }
+      x -= 10;
+    }
+    if (solution[i] == 3) {
+      for (int j = 0; j <= 10;j++) {
+        result->getPixel(x,y-j) = *red;
+      }
+      y -= 10;
+    }
+  }
+
+  //cout << "point: " << x << ", " << y << endl;
+  for (unsigned k = 0; k < 9; k++) {
+    result->getPixel(x-4+k, y+5).l = 1;
+  }
+
+  return result;
 }

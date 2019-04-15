@@ -46,4 +46,5 @@ private:
   vector<vector<bool>> rights_;
   vector<vector<bool>> bottoms_;
   DisjointSets dsets_;
+
 };

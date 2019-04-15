@@ -13,11 +13,11 @@ void DisjointSets::addelements(int num) {
 }
 
 int DisjointSets::find(int elem) {
-  if (sets_[elem] < 0) {
+  if (sets_.at(elem) < 0) {
     return elem;
   } else {
-    int root = find(sets_[elem]);
-    sets_[elem] = root;
+    int root = find(sets_.at(elem));
+    sets_.at(elem) = root;
     return root;
   }
 }

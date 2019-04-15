@@ -1,5 +1,5 @@
 
-/**
+
 #include "../cs225/catch/catch.hpp"
 #include <iostream>
 #include <fstream>
@@ -100,6 +100,8 @@ void assert_maze_tree(SquareMaze & maze, int width, int height)
 	pair<int, int> checks = assert_maze_helper(maze, width, height);
 	int components = checks.first;
 	int calls = checks.second;
+	// cout << "comp: " << components << endl;
+	// cout << "calls: " << calls << endl;
 	if (calls + components != width * height * 2)
 		FAIL("Maze has a cycle");
 	if (components != 1)
@@ -154,6 +156,9 @@ TEST_CASE("testMakeSmallMaze", "[weight=10][part2]")
 {
 	SquareMaze maze;
 	maze.makeMaze(2, 2);
+	cs225::PNG* unsolved = maze.drawMaze();
+	unsolved->writeToFile("unsolved.png");
+	delete unsolved;
 	assert_maze_tree(maze, 2, 2);
 }
 
@@ -182,7 +187,7 @@ TEST_CASE("testMakeMazeRandom", "[weight=10][part2]")
 {
 	SquareMaze maze1;
 	maze1.makeMaze(50, 50);
-	
+
 	SquareMaze maze2;
 	maze2.makeMaze(50, 50);
 	bool same = true;
@@ -351,5 +356,3 @@ TEST_CASE("testDrawSolutionLarge", "[weight=10][part2][timeout=30000]")
 	REQUIRE(*actualOutput == solnImage);
 	delete actualOutput;
 }
- */
-
