@@ -40,6 +40,7 @@ public:
   PNG* drawMazeWithSolution();
 
 
+
 private:
   int width_;
   int height_;

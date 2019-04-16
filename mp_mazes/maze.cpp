@@ -140,10 +140,10 @@ vector<int> SquareMaze::solveMaze() {
   vector<int> path;
   vector<int> longestPath;
   int destinationX;
-  //stack< pair<int, int> > stack;
 
-  //x, y, dir
+  // stack[0] = x, stack[1] = y, stack[2] = dir.
   stack<vector<int>> stack;
+  // if (x,y) is not visited, it is -1. Otherwise, contains potential.
   vector<vector<int>> visited(width_, vector<int>(height_, -1));
 
   int x = 0;
