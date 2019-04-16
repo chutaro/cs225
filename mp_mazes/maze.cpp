@@ -140,31 +140,33 @@ vector<int> SquareMaze::solveMaze() {
   vector<int> path;
   vector<int> longestPath;
   int destinationX;
-  stack< pair<int, int> > stack;
-  vector<vector<bool>> visited(width_, vector<bool>(height_, false));
+  //stack< pair<int, int> > stack;
+
+  //x, y, dir
+  stack<vector<int>> stack;
+  vector<vector<int>> visited(width_, vector<int>(height_, -1));
 
   int x = 0;
   int y = 0;
-  //int count = 0;
-  stack.push(make_pair(x, y));
+  int dir = -1;
+  vector<int> start = {x, y, dir};
+  stack.push(start);
 
   while (!stack.empty()) {
-      x = stack.top().first;
-      y = stack.top().second;
+      x = stack.top()[0];
+      y = stack.top()[1];
+      dir = stack.top()[2];
+      if (dir >= 0) {
+        path.push_back(dir);
+      }
       stack.pop();
 
-      // cout << "point: " << x << ", " << y << endl;
+      // cout << "current point: " << x << ", " << y << endl;
       // cout << "path: ";
       // for (size_t i = 0; i < path.size(); i++) {
       //   cout << path[i] << " ";
       // }
       // cout << endl;
-
-      if (visited[x][y] == true) {
-        path.pop_back();
-        continue;
-      }
-      visited[x][y] = true;
 
       if (y == width_-1) {
         if (path.size() > longestPath.size()) {
@@ -179,34 +181,64 @@ vector<int> SquareMaze::solveMaze() {
 
       int potential = 0;
       if (canTravel(x, y, 0)) {
-        stack.push(make_pair(x+1, y));
-        path.push_back(0);
-        potential++;
+        if (visited[x+1][y] < 0) {
+          vector<int> add = {x+1, y, 0};
+          stack.push(add);
+          potential++;
+        }
       }
       if (canTravel(x, y, 1)) {
-        stack.push(make_pair(x, y+1));
-        path.push_back(1);
-        potential++;
+        if (visited[x][y+1] < 0) {
+          vector<int> add = {x, y+1, 1};
+          stack.push(add);
+          potential++;
+        }
       }
       if (canTravel(x, y, 2)) {
-        stack.push(make_pair(x-1, y));
-        path.push_back(2);
-        potential++;
+        if (visited[x-1][y] < 0) {
+          vector<int> add = {x-1, y, 2};
+          stack.push(add);
+          potential++;
+        }
       }
       if (canTravel(x, y, 3)) {
-        stack.push(make_pair(x, y-1));
-        path.push_back(3);
-        potential++;
+        if (visited[x][y-1] < 0) {
+          vector<int> add = {x, y-1, 3};
+          stack.push(add);
+          potential++;
+        }
       }
-      // if (potential >= 3) {
-      //   count = 0;
-      // }
 
-      // if (potential == 1) {
-      //   for (int i = 0; i < count; i++) {
-      //     path.pop_back();
-      //   }
-      // }
+      if (stack.empty()) {
+        break;
+      }
+      visited[x][y] = potential;
+
+      if (potential == 0) {
+        while (visited[x][y] < 2) {
+          if (path.empty()) {
+            cout << "---------path empty-----------" << endl;
+            break;
+          }
+          if (path.back() == 0) {
+            x--;
+            path.pop_back();
+          } else if (path.back() == 1) {
+            y--;
+            path.pop_back();
+          } else if (path.back() == 2) {
+            x++;
+            path.pop_back();
+          } else if (path.back() == 3) {
+            y++;
+            path.pop_back();
+          } else {
+            cout << "something wrong" << endl;
+            break;
+          }
+        }
+        visited[x][y]--;
+      }
   }
 
   return longestPath;
@@ -257,7 +289,7 @@ PNG* SquareMaze::drawMazeWithSolution() {
   int x = 5;
   int y = 5;
 
-  // drawing solution, x 10??
+  // drawing solution
   for (size_t i = 0; i < solution.size();i++) {
     if (solution[i] == 0) {
       for (int j = 0; j <= 10;j++) {
@@ -285,7 +317,6 @@ PNG* SquareMaze::drawMazeWithSolution() {
     }
   }
 
-  //cout << "point: " << x << ", " << y << endl;
   for (unsigned k = 0; k < 9; k++) {
     result->getPixel(x-4+k, y+5).l = 1;
   }
