@@ -5,6 +5,9 @@
 
 #include "NimLearner.h"
 #include <ctime>
+#include <cstdlib>
+#include <string>
+using std::string;
 
 
 /**
@@ -26,6 +29,29 @@
  */
 NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
     /* Your code goes here! */
+    for (unsigned i = 0; i <= startingTokens; i++) {
+      string p1 = "p1-" + std::to_string(i);
+      string p2 = "p2-" + std::to_string(i);
+      g_.insertVertex(p1);
+      g_.insertVertex(p2);
+      if (i > 0) {
+        string p1pre = "p1-" + std::to_string(i-1);
+        string p2pre = "p2-" + std::to_string(i-1);
+        g_.insertEdge(p1, p2pre);
+        g_.insertEdge(p2, p1pre);
+        g_.setEdgeWeight(p1, p2pre, 0);
+        g_.setEdgeWeight(p2, p1pre, 0);
+      }
+      if (i > 1) {
+        string p1pre = "p1-" + std::to_string(i-2);
+        string p2pre = "p2-" + std::to_string(i-2);
+        g_.insertEdge(p1, p2pre);
+        g_.insertEdge(p2, p1pre);
+        g_.setEdgeWeight(p1, p2pre, 0);
+        g_.setEdgeWeight(p2, p1pre, 0);
+      }
+    }
+    startingVertex_ = "p1-" + std::to_string(startingTokens);
 }
 
 /**
@@ -40,6 +66,17 @@ NimLearner::NimLearner(unsigned startingTokens) : g_(true, true) {
 std::vector<Edge> NimLearner::playRandomGame() const {
   vector<Edge> path;
  /* Your code goes here! */
+ Vertex current = startingVertex_;
+  while (true) {
+    vector<Vertex> adj = g_.getAdjacent(current);
+    int random = rand() % adj.size();
+    Vertex next = adj[random];
+    path.push_back(g_.getEdge(current, next));
+    current = next;
+    if (current == "p1-0" || current == "p2-0") {
+      break;
+    }
+  }
   return path;
 }
 

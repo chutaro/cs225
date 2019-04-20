@@ -2,6 +2,7 @@
  * @file lphashtable.cpp
  * Implementation of the LPHashTable class.
  */
+#include <iostream>
 #include "lphashtable.h"
 
 template <class K, class V>
@@ -83,7 +84,7 @@ void LPHashTable<K, V>::insert(K const& key, V const& value)
      if (shouldResize()) {resizeTable();}
 
      unsigned idx = hashes::hash(key, size);
-     for (size_t i = idx; true; idx++) {
+     for (size_t i = idx; true; i++) {
        size_t realIdx = i % size;
        if (!should_probe[realIdx]) {
          table[realIdx] = new std::pair<K, V>(key, value);
@@ -100,14 +101,17 @@ void LPHashTable<K, V>::remove(K const& key)
      * @todo: implement this function
      */
      unsigned idx = hashes::hash(key, size);
-     for (size_t i = idx; true; idx++) {
+     for (size_t i = idx; true; i++) {
        size_t realIdx = i % size;
        if (!should_probe[realIdx]) {
          return;
        }
        if (table[realIdx]->first == key) {
          delete table[realIdx];
+         table[realIdx] = NULL;
+         elems--;
          should_probe[realIdx] = false;
+         return;
        }
      }
 }
@@ -121,7 +125,16 @@ int LPHashTable<K, V>::findIndex(const K& key) const
      *
      * Be careful in determining when the key is not in the table!
      */
-
+     unsigned idx = hashes::hash(key, size);
+     for (size_t i = idx; true; i++) {
+       size_t realIdx = i % size;
+       if (!should_probe[realIdx]) {
+         return -1;
+       }
+       if (table[realIdx]->first == key) {
+         return realIdx;
+       }
+     }
     return -1;
 }
 
@@ -179,4 +192,35 @@ void LPHashTable<K, V>::resizeTable()
      *
      * @hint Use findPrime()!
      */
+     size_t newSize = findPrime(size*2);
+     std::cout << "----find prime----" << std::endl;
+     std::cout << "size: " << size << ", prime: " << newSize << std::endl;
+
+     std::pair<K, V>** newTable = new std::pair<K, V>*[newSize];
+     delete[] should_probe;
+     should_probe = new bool[newSize];
+     for (size_t i = 0; i < newSize; i++) {
+         newTable[i] = NULL;
+         should_probe[i] = false;
+     }
+     std::cout << "----reset table done----" << std::endl;
+
+     for (size_t i = 0; i < size; i++) {
+       if (table[i] != NULL) {
+         unsigned idx = hashes::hash(table[i]->first, newSize);
+         std::cout << "compute hash for: " << i << std::endl;
+         for (size_t j = idx; true; j++) {
+           size_t realIdx = j % newSize;
+           if (!should_probe[realIdx]) {
+             newTable[realIdx] = table[i];
+             should_probe[realIdx] = true;
+             break;
+           }
+         }
+       }
+     }
+
+     delete[] table;
+     table = newTable;
+     size = newSize;
 }
