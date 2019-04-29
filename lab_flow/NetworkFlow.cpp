@@ -6,6 +6,9 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#include <iostream>
+using std::cout;
+using std::endl;
 
 #include "graph.h"
 #include "edge.h"
@@ -37,6 +40,7 @@ NetworkFlow::NetworkFlow(Graph & startingGraph, Vertex source, Vertex sink) :
     flow_.insertEdge(e.source, e.dest);
     flow_.setEdgeWeight(e.source, e.dest, 0);
   }
+  maxFlow_ = 0;
 }
 
   /**
@@ -101,7 +105,7 @@ int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
   // YOUR CODE HERE
   int min;
   for (size_t i = 0; i < path.size()-1; i++) {
-    int weight = residual_.getEdge(path[i], path[i+1]).getWeight();
+    int weight = residual_.getEdgeWeight(path[i], path[i+1]);
     if (i == 0) {
       min = weight;
     }
@@ -122,6 +126,22 @@ int NetworkFlow::pathCapacity(const std::vector<Vertex> & path) const {
 
 const Graph & NetworkFlow::calculateFlow() {
   // YOUR CODE HERE
+  std::vector<Vertex> path;
+  while (findAugmentingPath(source_, sink_, path)) {
+    int capa = pathCapacity(path);
+    for (size_t i = 0; i < path.size()-1; i++) {
+      if (flow_.edgeExists(path[i], path[i+1])) {
+        flow_.setEdgeWeight(path[i], path[i+1], flow_.getEdgeWeight(path[i], path[i+1]) + capa);
+        residual_.setEdgeWeight(path[i], path[i+1], residual_.getEdgeWeight(path[i], path[i+1]) - capa);
+        residual_.setEdgeWeight(path[i+1], path[i], residual_.getEdgeWeight(path[i+1], path[i]) + capa);
+      } else {
+        flow_.setEdgeWeight(path[i+1], path[i], flow_.getEdgeWeight(path[i+1], path[i]) - capa);
+        residual_.setEdgeWeight(path[i], path[i+1], residual_.getEdgeWeight(path[i], path[i+1]) + capa);
+        residual_.setEdgeWeight(path[i+1], path[i], residual_.getEdgeWeight(path[i+1], path[i]) - capa);
+      }
+    }
+    maxFlow_ += capa;
+  }
   return flow_;
 }
 
