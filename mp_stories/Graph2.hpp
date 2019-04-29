@@ -45,11 +45,9 @@ std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const s
   while (!stack.empty()) {
     std::string current = stack.top();
     path.push_back(current);
-    cout << "add: " << current << endl;
     stack.pop();
 
     if (current == end) {
-      cout << "----finish----" << endl;
       if (shortestPath.size() == 0) {
         shortestPath = path;
       } else if (path.size() < shortestPath.size()) {
@@ -77,26 +75,18 @@ std::list<std::string> Graph<V,E>::shortestPath(const std::string start, const s
 
     if (potential == 0) {
       while (visited[current] < 2) {
-        if (path.empty()) {
-          cout << "---------path empty-----------" << endl;
-          break;
-        }
         path.pop_back();
+        visited[current] = -1;
         current = path.back();
       }
       visited[current]--;
     }
   }
 
-  cout << "currentPath:" << endl;
-  for (std::string str : path) {
-    cout << str << endl;
-  }
-
-  cout << "shortestPath:" << endl;
-  for (std::string str : shortestPath) {
-    cout << str << endl;
-  }
+  // cout << "shortestPath:" << endl;
+  // for (std::string str : shortestPath) {
+  //   cout << str << endl;
+  // }
 
   return shortestPath;
 }

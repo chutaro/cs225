@@ -53,65 +53,65 @@ Graph<Vertex, DirectedEdge> createTestDiGraph() {
 }
 
 
-// TEST_CASE("Graphs with `DirectedEdge`s have directed edges", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g;
-//   g.insertVertex("a");
-//   g.insertVertex("b");
-//   g.insertEdge("a", "b");
-//
-//   REQUIRE( g.incidentEdges("a").front().get().directed() == true );
-// }
-//
-// TEST_CASE("Directed: eight-vertex test graph has correct properties", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   REQUIRE( g.numVertices() == 8 );
-//   REQUIRE( g.numEdges() == 9 );
-// }
-//
-// TEST_CASE("Directed: Graph::degree is correct", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   REQUIRE( g.degree("a") == 3 );
-//   REQUIRE( g.degree("c") == 4 );
-//   REQUIRE( g.degree("g") == 2 );
-//   REQUIRE( g.degree("f") == 1 );
-// }
-//
-// TEST_CASE("Directed: Graph::incidentEdges contains all incident edges", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   REQUIRE( g.incidentEdges("a").size() == 3 );
-//   REQUIRE( g.incidentEdges("c").size() == 4 );
-//   REQUIRE( g.incidentEdges("d").size() == 2 );
-//   REQUIRE( g.incidentEdges("h").size() == 2 );
-// }
-//
-// TEST_CASE("Directed: Graph::isAdjacent is correct (same-order test)", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   REQUIRE( g.isAdjacent("c", "a") == true );
-//   REQUIRE( g.isAdjacent("a", "d") == true );
-//   REQUIRE( g.isAdjacent("f", "g") == true );
-// }
-//
-// TEST_CASE("Directed: Graph::isAdjacent is correct (opposite-order test)", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   REQUIRE( g.isAdjacent("d", "a") == false );
-//   REQUIRE( g.isAdjacent("g", "h") == false );
-// }
-//
-// TEST_CASE("Directed: Graph::removeEdge is correct", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   g.removeEdge("c","a");
-//   REQUIRE( g.numEdges() == 8 );
-//   REQUIRE( g.incidentEdges("a").size() == 2 );
-//   REQUIRE( g.incidentEdges("c").size() == 3 );
-//   REQUIRE( g.isAdjacent("c", "a") == false );
-// }
-//
-// TEST_CASE("Directed: Graph::removeVertex is correct", "[weight=1]") {
-//   Graph<Vertex, DirectedEdge> g = createTestDiGraph();
-//   g.removeVertex("a");
-//   REQUIRE( g.numVertices() == 7 );
-//   REQUIRE( g.numEdges() == 6 );
-//   REQUIRE( g.incidentEdges("b").size() == 1 );
-//   REQUIRE( g.incidentEdges("c").size() == 3 );
-//   REQUIRE( g.incidentEdges("d").size() == 1 );
-// }
+TEST_CASE("Graphs with `DirectedEdge`s have directed edges", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g;
+  g.insertVertex("a");
+  g.insertVertex("b");
+  g.insertEdge("a", "b");
+
+  REQUIRE( g.incidentEdges("a").front().get().directed() == true );
+}
+
+TEST_CASE("Directed: eight-vertex test graph has correct properties", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  REQUIRE( g.numVertices() == 8 );
+  REQUIRE( g.numEdges() == 9 );
+}
+
+TEST_CASE("Directed: Graph::degree is correct", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  REQUIRE( g.degree("a") == 3 );
+  REQUIRE( g.degree("c") == 4 );
+  REQUIRE( g.degree("g") == 2 );
+  REQUIRE( g.degree("f") == 1 );
+}
+
+TEST_CASE("Directed: Graph::incidentEdges contains all incident edges", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  REQUIRE( g.incidentEdges("a").size() == 3 );
+  REQUIRE( g.incidentEdges("c").size() == 4 );
+  REQUIRE( g.incidentEdges("d").size() == 2 );
+  REQUIRE( g.incidentEdges("h").size() == 2 );
+}
+
+TEST_CASE("Directed: Graph::isAdjacent is correct (same-order test)", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  REQUIRE( g.isAdjacent("c", "a") == true );
+  REQUIRE( g.isAdjacent("a", "d") == true );
+  REQUIRE( g.isAdjacent("f", "g") == true );
+}
+
+TEST_CASE("Directed: Graph::isAdjacent is correct (opposite-order test)", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  REQUIRE( g.isAdjacent("d", "a") == false );
+  REQUIRE( g.isAdjacent("g", "h") == false );
+}
+
+TEST_CASE("Directed: Graph::removeEdge is correct", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  g.removeEdge("c","a");
+  REQUIRE( g.numEdges() == 8 );
+  REQUIRE( g.incidentEdges("a").size() == 2 );
+  REQUIRE( g.incidentEdges("c").size() == 3 );
+  REQUIRE( g.isAdjacent("c", "a") == false );
+}
+
+TEST_CASE("Directed: Graph::removeVertex is correct", "[weight=1]") {
+  Graph<Vertex, DirectedEdge> g = createTestDiGraph();
+  g.removeVertex("a");
+  REQUIRE( g.numVertices() == 7 );
+  REQUIRE( g.numEdges() == 6 );
+  REQUIRE( g.incidentEdges("b").size() == 1 );
+  REQUIRE( g.incidentEdges("c").size() == 3 );
+  REQUIRE( g.incidentEdges("d").size() == 1 );
+}
